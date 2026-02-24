@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Routes, Route, Link } from 'react-router-dom';
 
 function Home() {
@@ -13,6 +14,7 @@ function Home() {
   );
 }
 
+Placeholder.propTypes = { title: PropTypes.string.isRequired };
 function Placeholder({ title }) {
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
