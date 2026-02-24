@@ -124,24 +124,6 @@ The raw OpenAPI JSON spec is also available at `http://localhost:5000/api/docs.j
 | POST   | /api/auth/login      | Public | Login             |
 | GET    | /api/auth/me         | Bearer | Current user info |
 
-#### Quick API test
-
-```bash
-# Register
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Alice","email":"alice@example.com","password":"secret123","role":"jobseeker"}'
-
-# Login
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"alice@example.com","password":"secret123"}'
-
-# Protected route (replace TOKEN)
-curl http://localhost:5000/api/auth/me \
-  -H "Authorization: Bearer TOKEN"
-```
-
 
 ## Running Tests
 

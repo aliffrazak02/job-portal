@@ -41,12 +41,6 @@ A full-stack job portal connecting job seekers and employers, built with the MER
 | `employer`  | Posts and manages job listings               |
 | `admin`     | Manage job board analytics                   |
 
-### Authentication Flow
-
-1. Register or login via `/api/auth/*`
-2. Server returns a signed JWT (7-day expiry)
-3. Client sends `Authorization: Bearer <token>` on protected requests
-4. `protect` middleware verifies the token and attaches `req.user`
 
 ### Project Structure
 
