@@ -9,7 +9,7 @@ const SignUp = () => {
       <div className="jobboard-login-card">
         <div className="jobboard-login-header">
           <span className="jobboard-login-badge">Get Started</span>
-          <h1>Create your account</h1>
+          <h1>Register</h1>
           <p>
             Join JobBoard to manage applications, track saved jobs, and
             move your career forward.
