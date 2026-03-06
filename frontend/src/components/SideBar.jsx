@@ -1,207 +1,97 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
-const SignUp = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(false);
+const SideBar = () => {
 
-  return (
-    <section className="jobboard-signup-section">
-      <div className="jobboard-signup-card">
-        <div className="jobboard-signup-header">
-          <span className="jobboard-signup-badge">Create Account</span>
-          <h1>Join JobBoard</h1>
-          <p>
-            Create your account to explore jobs, save opportunities, and track
-            your applications.
-          </p>
-        </div>
+const items = [
+{ name: "Dashboard", path: "/dashboard" },
+{ name: "Browse Jobs", path: "/jobs" },
+{ name: "Saved Jobs", path: "/saved" },
+{ name: "Applications", path: "/applications" },
+{ name: "Messages", path: "/messages" },
+{ name: "Profile", path: "/profile" },
+{ name: "Settings", path: "/settings" }
+];
 
-        <form className="jobboard-signup-form">
-          <div className="jobboard-form-row">
-            <div className="jobboard-form-group">
-              <label>First Name</label>
-              <input type="text" placeholder="First name" />
-            </div>
+return (
 
-            <div className="jobboard-form-group">
-              <label>Last Name</label>
-              <input type="text" placeholder="Last name" />
-            </div>
-          </div>
+<div className="sidebar">
 
-          <div className="jobboard-form-group">
-            <label>Email</label>
-            <input type="email" placeholder="Enter your email" />
-          </div>
+<div className="sidebar-logo">
+JobBoard
+</div>
 
-          <div className="jobboard-form-group">
-            <label>Password</label>
-            <div className="jobboard-input-wrapper">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Create a password"
-              />
-              <button
-                type="button"
-                className="jobboard-password-toggle"
-                onClick={() => setShowPassword((prev) => !prev)}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
-          </div>
+<nav>
 
-          <div className="jobboard-checkbox">
-            <input
-              type="checkbox"
-              checked={agreeTerms}
-              onChange={() => setAgreeTerms((prev) => !prev)}
-            />
-            <span>
-              I agree to the <a href="/terms">Terms</a> and{" "}
-              <a href="/privacy">Privacy Policy</a>
-            </span>
-          </div>
+{items.map((item) => (
 
-          <button type="submit" className="jobboard-primary-btn">
-            Create Account
-          </button>
+<Link
+key={item.path}
+to={item.path}
+className="sidebar-item"
+>
+{item.name}
+</Link>
 
-          <div className="jobboard-divider">
-            <span>or</span>
-          </div>
+))}
 
-          <div className="jobboard-social-login">
-            <button className="jobboard-social-btn">
-              <span>G</span>
-              Continue with Google
-            </button>
+</nav>
 
-            <button className="jobboard-social-btn">
-              <span>in</span>
-              Continue with LinkedIn
-            </button>
-          </div>
-
-          <p className="jobboard-login-text">
-            Already have an account? <a href="/login">Login</a>
-          </p>
-        </form>
-      </div>
+<div className="sidebar-footer">
+<Link to="/logout">Logout</Link>
+</div>
 
 <style>{`
 
-.jobboard-signup-section {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 20px;
-
-  background:
-  radial-gradient(circle at top left, rgba(37,99,235,0.12), transparent 30%),
-  radial-gradient(circle at bottom right, rgba(99,102,241,0.12), transparent 30%),
-  linear-gradient(135deg,#f8fafc,#eef4ff);
+.sidebar{
+width:240px;
+height:100vh;
+background:white;
+border-right:1px solid #e5e7eb;
+padding:25px;
+display:flex;
+flex-direction:column;
 }
 
-.jobboard-signup-card {
-  width:100%;
-  max-width:560px;
-  background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(16px);
-  border-radius:28px;
-  padding:40px 32px;
-  border:1px solid rgba(226,232,240,0.9);
-  box-shadow:
-  0 20px 60px rgba(15,23,42,0.08),
-  0 8px 24px rgba(37,99,235,0.08);
+.sidebar-logo{
+font-size:20px;
+font-weight:700;
+margin-bottom:30px;
 }
 
-.jobboard-signup-header h1{
-  margin:0 0 10px;
-  font-size:2.2rem;
+.sidebar-item{
+display:block;
+padding:12px;
+border-radius:8px;
+margin-bottom:6px;
+text-decoration:none;
+color:#374151;
+font-weight:500;
 }
 
-.jobboard-signup-badge{
-  background:rgba(37,99,235,0.1);
-  color:#2563eb;
-  padding:6px 14px;
-  border-radius:999px;
-  font-size:.85rem;
-  font-weight:700;
+.sidebar-item:hover{
+background:#f3f4f6;
 }
 
-.jobboard-form-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
+.sidebar-footer{
+margin-top:auto;
 }
 
-.jobboard-form-group{
-  display:flex;
-  flex-direction:column;
-  margin-bottom:16px;
-}
-
-.jobboard-form-group input{
-  padding:12px 14px;
-  border-radius:10px;
-  border:1px solid #e2e8f0;
-}
-
-.jobboard-input-wrapper{
-  position:relative;
-}
-
-.jobboard-password-toggle{
-  position:absolute;
-  right:12px;
-  top:50%;
-  transform:translateY(-50%);
-  border:none;
-  background:none;
-  cursor:pointer;
-}
-
-.jobboard-primary-btn{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-weight:700;
-  background:linear-gradient(135deg,#2563eb,#1d4ed8);
-  color:white;
-  margin-top:10px;
-}
-
-.jobboard-divider{
-  text-align:center;
-  margin:20px 0;
-  color:#94a3b8;
-}
-
-.jobboard-social-login{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.jobboard-social-btn{
-  border:1px solid #e2e8f0;
-  border-radius:10px;
-  padding:10px;
-  background:white;
-}
-
-.jobboard-checkbox{
-  display:flex;
-  gap:10px;
-  font-size:.9rem;
+.sidebar-footer a{
+display:block;
+padding:12px;
+background:#2563eb;
+color:white;
+text-align:center;
+border-radius:8px;
+text-decoration:none;
 }
 
 `}</style>
-    </section>
-  );
+
+</div>
+
+);
 };
 
-export default SignUp;
+export default SideBar;
