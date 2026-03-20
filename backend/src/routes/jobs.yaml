@@ -1,0 +1,230 @@
+tags:
+  - name: Jobs
+    description: Job listing management
+
+/api/jobs:
+  post:
+    summary: Create a new job listing
+    tags: [Jobs]
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateJobRequest'
+    responses:
+      201:
+        description: Job created successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobListing'
+      400:
+        description: Validation error
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/ValidationErrorResponse'
+                - $ref: '#/components/schemas/ErrorResponse'
+      401:
+        description: Unauthorized (missing or invalid token)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      403:
+        description: Forbidden (not employer or not owner of job)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'      
+      500:
+        description: Server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+  get:
+    summary: Get paginated job listings
+    tags: [Jobs]
+    parameters:
+      - in: query
+        name: page
+        required: false
+        description: Page number (starts at 1)
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - in: query
+        name: limit
+        required: false
+        description: Number of records per page
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+    responses:
+      200:
+        description: Paginated list of job listings
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatedJobsResponse'
+      400:
+        description: Validation error (invalid pagination query)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationErrorResponse'
+      500:
+        description: Server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+/api/jobs/{id}:
+  put:
+    summary: Update a job listing
+    tags: [Jobs]
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: MongoDB ObjectId of the job listing
+        schema:
+          type: string
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                example: Senior Software Engineer
+              company:
+                type: string
+                example: Tech Corp
+              location:
+                type: string
+                example: New York, NY
+              description:
+                type: string
+                example: Updated job description
+              requirements:
+                type: array
+                items:
+                  type: string
+                example: ['5+ years Node.js experience', 'MongoDB']
+              salaryRange:
+                type: string
+                example: $100,000 - $140,000
+              workType:
+                type: string
+                enum: [Full-time, Part-time, Contract, Internship]
+                example: Full-time
+    responses:
+      200:
+        description: Job updated successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobListing'
+      400:
+        description: Validation error (invalid id or invalid payload)
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/ValidationErrorResponse'
+                - $ref: '#/components/schemas/ErrorResponse'
+      401:
+        description: Unauthorized (missing or invalid token)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      403:
+        description: Forbidden (not employer or not owner of job)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      404:
+        description: Job not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      500:
+        description: Server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+  delete:
+    summary: Delete a job listing
+    tags: [Jobs]
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: MongoDB ObjectId of the job listing
+        schema:
+          type: string
+    responses:
+      200:
+        description: Job deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Job deleted successfully
+      400:
+        description: Validation error (invalid id)
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/ValidationErrorResponse'
+                - $ref: '#/components/schemas/ErrorResponse'
+      401:
+        description: Unauthorized (missing or invalid token)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      403:
+        description: Forbidden (not employer or not owner of job)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      404:
+        description: Job not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      500:
+        description: Server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
