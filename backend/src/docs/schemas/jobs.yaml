@@ -44,6 +44,35 @@ components:
               format: email
               example: alice@example.com
 
+    PaginatedJobsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobListing'
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            totalItems:
+              type: integer
+              example: 25
+            totalPages:
+              type: integer
+              example: 3
+            hasNextPage:
+              type: boolean
+              example: true
+            hasPrevPage:
+              type: boolean
+              example: false
+
     CreateJobRequest:
       type: object
       required: [title, company, location, description, workType]
