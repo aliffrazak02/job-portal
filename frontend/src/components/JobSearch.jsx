@@ -49,8 +49,7 @@ const JobSearch = ({ jobs }) => {
       <div className="js-results-info">
         {submittedQuery.trim() ? (
           <p>
-            Results for <strong>"{submittedQuery}"</strong>
-          </p>
+Results for <strong>{submittedQuery}</strong>          </p>
         ) : (
           <p>Showing all jobs</p>
         )}
