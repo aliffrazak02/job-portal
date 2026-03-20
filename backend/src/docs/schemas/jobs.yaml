@@ -3,7 +3,7 @@ components:
     JobListing:
       type: object
       properties:
-        id:
+        _id:
           type: string
           example: 665f1a2b3c4d5e6f7a8b9c0d
         title:
@@ -33,7 +33,7 @@ components:
         postedBy:
           type: object
           properties:
-            id:
+            _id:
               type: string
               example: 665f1a2b3c4d5e6f7a8b9c0d
             name:
