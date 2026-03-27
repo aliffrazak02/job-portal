@@ -2,10 +2,51 @@ tags:
   - name: Applications
     description: Job application submission and employer review
 
+/api/applications/my:
+  get:
+    summary: Get my applications
+    description: Jobseeker-only. Returns all applications submitted by the authenticated jobseeker, with job details and current status.
+    tags: [Applications]
+    security:
+      - BearerAuth: []
+    responses:
+      200:
+        description: List of the jobseeker's applications
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Application'
+      401:
+        description: Unauthorized (missing or invalid token)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      403:
+        description: Forbidden (not a jobseeker)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      500:
+        description: Server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
 /api/applications:
   post:
     summary: Submit a job application
+    description: Jobseeker-only. Submits a new application for an active job listing.
     tags: [Applications]
+    security:
+      - BearerAuth: []
     requestBody:
       required: true
       content:
@@ -49,6 +90,18 @@ tags:
                 summary: Job is no longer active
                 value:
                   message: This job is no longer accepting applications.
+      401:
+        description: Unauthorized (missing or invalid token)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+      403:
+        description: Forbidden (not a jobseeker)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
       404:
         description: Job not found
         content:

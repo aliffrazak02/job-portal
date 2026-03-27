@@ -17,6 +17,10 @@ components:
           type: string
           description: MongoDB ObjectId of the job listing
           example: 665f1a2b3c4d5e6f7a8b9c0e
+        applicant:
+          type: string
+          description: MongoDB ObjectId of the jobseeker who submitted
+          example: 665f1a2b3c4d5e6f7a8b9c0f
         applicationStatus:
           type: string
           enum: [pending, reviewed, shortlisted, rejected]
