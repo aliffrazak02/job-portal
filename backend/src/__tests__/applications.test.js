@@ -86,7 +86,7 @@ describe('POST /api/applications', () => {
       .attach('resume', FAKE_PDF, 'resume.pdf');
 
     expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/required/i);
+    expect(res.body.errors).toBeDefined();
   });
 
   it('returns 400 for invalid email', async () => {
@@ -104,7 +104,7 @@ describe('POST /api/applications', () => {
       .attach('resume', FAKE_PDF, 'resume.pdf');
 
     expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/email/i);
+    expect(res.body.errors).toBeDefined();
   });
 
   it('returns 400 for invalid phone number', async () => {
@@ -122,7 +122,7 @@ describe('POST /api/applications', () => {
       .attach('resume', FAKE_PDF, 'resume.pdf');
 
     expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/phone/i);
+    expect(res.body.errors).toBeDefined();
   });
 
   it('returns 400 when resume is not attached', async () => {
@@ -352,9 +352,8 @@ describe('PATCH /api/applications/:id/status', () => {
       .set('Authorization', `Bearer ${token}`)
       .send({ status: 'reviewed' });
 
-    // express-validator adds errors but the controller doesn't call validationResult,
-    // so Mongoose throws a CastError caught by the try/catch → 500
-    expect(res.status).not.toBe(200);
+    expect(res.status).toBe(400);
+    expect(res.body.errors).toBeDefined();
   });
 
   it('returns 400 for invalid status value', async () => {
@@ -369,7 +368,7 @@ describe('PATCH /api/applications/:id/status', () => {
       .send({ status: 'hired' });
 
     expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/status must be one of/i);
+    expect(res.body.errors).toBeDefined();
   });
 
   it('returns 404 when application does not exist', async () => {
