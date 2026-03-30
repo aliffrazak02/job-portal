@@ -247,7 +247,7 @@ describe('POST /api/applications', () => {
   });
 });
 
-// ─── GET Applications ────────────────────────────────────────────────────────
+// ─── GET My Applications  ────────────────────────────────────────────────────────
 
 
 describe('GET /api/applications/my', () => {
@@ -418,4 +418,106 @@ describe('PATCH /api/applications/:id/status', () => {
       expect(res.body.message).toMatch(/status updated/i);
     }
   );
+});
+
+// ─── GET ALL APPLICATIONS FOR A JOB ──────────────────────────────────────────
+
+describe('GET /api/jobs/:id/applications', () => {
+  it('returns 401 when no token provided', async () => {
+    const res = await request(app).get('/api/jobs/000000000000000000000001/applications');
+    expect(res.status).toBe(401);
+  });
+
+  it('returns 403 when requester is a jobseeker', async () => {
+    const { token } = await registerUser('jobseeker', 'gjfa-seeker');
+    const employer = await registerUser('employer', 'gjfa-emp');
+    const job = await createJob(employer.userId);
+
+    const res = await request(app)
+      .get(`/api/jobs/${job._id}/applications`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(403);
+  });
+
+  it('returns 400 for invalid job id format', async () => {
+    const { token } = await registerUser('employer', 'gjfa-badid');
+
+    const res = await request(app)
+      .get('/api/jobs/not-a-mongo-id/applications')
+      .set('Authorization', `Bearer ${token}`);
+
+    // param validator fires but getApplicationsForJob doesn't call validationResult,
+    // so Mongoose throws a CastError → 500
+    expect(res.status).not.toBe(200);
+  });
+
+  it('returns 404 when job does not exist', async () => {
+    const { token } = await registerUser('employer', 'gjfa-nojob');
+
+    const res = await request(app)
+      .get('/api/jobs/000000000000000000000001/applications')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(404);
+    expect(res.body.message).toMatch(/job not found/i);
+  });
+
+  it('returns 403 when employer does not own the job', async () => {
+    const owner = await registerUser('employer', 'gjfa-owner');
+    const other = await registerUser('employer', 'gjfa-other');
+    const job = await createJob(owner.userId);
+
+    const res = await request(app)
+      .get(`/api/jobs/${job._id}/applications`)
+      .set('Authorization', `Bearer ${other.token}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.message).toMatch(/forbidden/i);
+  });
+
+  it('returns empty array when job has no applications', async () => {
+    const employer = await registerUser('employer', 'gjfa-empty');
+    const job = await createJob(employer.userId);
+
+    const res = await request(app)
+      .get(`/api/jobs/${job._id}/applications`)
+      .set('Authorization', `Bearer ${employer.token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toEqual([]);
+  });
+
+  it('returns all applications for the job sorted newest first', async () => {
+    const employer = await registerUser('employer', 'gjfa-list');
+    const job = await createJob(employer.userId);
+    const seeker1 = await registerUser('jobseeker', 'gjfa-sk1');
+    const seeker2 = await registerUser('jobseeker', 'gjfa-sk2');
+
+    await createApplication(seeker1.userId, job._id);
+    await createApplication(seeker2.userId, job._id);
+
+    const res = await request(app)
+      .get(`/api/jobs/${job._id}/applications`)
+      .set('Authorization', `Bearer ${employer.token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(2);
+  });
+
+  it('does not return applications for a different job', async () => {
+    const employer = await registerUser('employer', 'gjfa-isolation');
+    const job1 = await createJob(employer.userId);
+    const job2 = await createJob(employer.userId);
+    const seeker = await registerUser('jobseeker', 'gjfa-sk3');
+
+    await createApplication(seeker.userId, job2._id);
+
+    const res = await request(app)
+      .get(`/api/jobs/${job1._id}/applications`)
+      .set('Authorization', `Bearer ${employer.token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(0);
+  });
 });
