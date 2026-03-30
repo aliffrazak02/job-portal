@@ -33,13 +33,17 @@ async function registerUser(role = 'employer', prefix = 'jobs') {
   return { token: res.body.token, userId: res.body.user.id };
 }
 
-async function seedJobs(total = 15) {
-  const employer = await User.create({
+async function createEmployer(prefix = 'employer') {
+  return User.create({
     name: faker.person.fullName(),
-    email: `employer-get-${faker.string.uuid()}@example.com`,
+    email: `${prefix}-${faker.string.uuid()}@example.com`,
     password: 'password123',
     role: 'employer',
   });
+}
+
+async function seedJobs(total = 15) {
+  const employer = await createEmployer('get');
 
   const jobs = Array.from({ length: total }, () => ({
     ...buildJobPayload(),
@@ -48,6 +52,42 @@ async function seedJobs(total = 15) {
 
   await Job.insertMany(jobs);
 }
+
+async function seedSearchJobs() {
+  const employer = await createEmployer('search');
+
+  await Job.insertMany([
+    {
+      ...buildJobPayload({
+        title: 'Senior React Developer',
+        company: 'Acme Corp',
+        location: 'Vancouver, CA',
+        workType: 'Full-time',
+      }),
+      postedBy: employer._id,
+    },
+    {
+      ...buildJobPayload({
+        title: 'Backend Engineer',
+        company: 'Globex',
+        location: 'Toronto, CA',
+        workType: 'Contract',
+      }),
+      postedBy: employer._id,
+    },
+    {
+      ...buildJobPayload({
+        title: 'Internship Program',
+        company: 'Initech',
+        location: 'Vancouver, CA',
+        workType: 'Internship',
+      }),
+      postedBy: employer._id,
+    },
+  ]);
+}
+
+// ─── Get Jobs ────────────────────────────────────────────────────────────────
 
 describe('GET /api/jobs', () => {
   it('returns paginated jobs with default page and limit', async () => {
@@ -92,6 +132,77 @@ describe('GET /api/jobs', () => {
   });
 });
 
+// ─── Search Jobs ────────────────────────────────────────────────────────────────
+
+describe('GET /api/jobs/search', () => {
+  beforeEach(seedSearchJobs);
+
+  it('returns all jobs when no filters are provided', async () => {
+    const res = await request(app).get('/api/jobs/search');
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(res.body.total).toBe(res.body.data.length);
+  });
+
+  it('filters by keyword in title', async () => {
+    const res = await request(app).get('/api/jobs/search?q=React');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBeGreaterThanOrEqual(1);
+    expect(res.body.data.every((j) => /react/i.test(j.title + j.company + j.description))).toBe(true);
+  });
+
+  it('filters by keyword in company name', async () => {
+    const res = await request(app).get('/api/jobs/search?q=Globex');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBeGreaterThanOrEqual(1);
+    expect(res.body.data.every((j) => /globex/i.test(j.title + j.company + j.description))).toBe(true);
+  });
+
+  it('filters by location', async () => {
+    const res = await request(app).get('/api/jobs/search?location=Vancouver');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBeGreaterThanOrEqual(1);
+    expect(res.body.data.every((j) => /vancouver/i.test(j.location))).toBe(true);
+  });
+
+  it('filters by workType', async () => {
+    const res = await request(app).get('/api/jobs/search?workType=Contract');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBeGreaterThanOrEqual(1);
+    expect(res.body.data.every((j) => j.workType === 'Contract')).toBe(true);
+  });
+
+  it('combines q and location filters', async () => {
+    const res = await request(app).get('/api/jobs/search?q=Internship&location=Vancouver');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.every((j) => /vancouver/i.test(j.location))).toBe(true);
+  });
+
+  it('returns 400 for invalid workType', async () => {
+    const res = await request(app).get('/api/jobs/search?workType=InvalidType');
+
+    expect(res.status).toBe(400);
+    expect(res.body.errors).toBeDefined();
+    expect(res.body.errors.length).toBeGreaterThan(0);
+  });
+
+  it('returns empty data array when no jobs match', async () => {
+    const res = await request(app).get('/api/jobs/search?q=xyzzy_no_match_ever');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(0);
+    expect(res.body.total).toBe(0);
+  });
+});
+
+// ─── Create Job ────────────────────────────────────────────────────────────────
+
 describe('POST /api/jobs', () => {
   it('creates a job for authenticated employer', async () => {
     const { token } = await registerUser('employer', 'create');
@@ -126,6 +237,8 @@ describe('POST /api/jobs', () => {
     expect(res.status).toBe(403);
   });
 });
+
+// ─── Update Job ────────────────────────────────────────────────────────────────
 
 describe('PUT /api/jobs/:id', () => {
   it('updates a job when owner is authenticated employer', async () => {
@@ -186,6 +299,8 @@ describe('PUT /api/jobs/:id', () => {
     expect(res.body.errors).toBeDefined();
   });
 });
+
+// ─── Delete Job ────────────────────────────────────────────────────────────────
 
 describe('DELETE /api/jobs/:id', () => {
   it('deletes a job when owner is authenticated employer', async () => {
