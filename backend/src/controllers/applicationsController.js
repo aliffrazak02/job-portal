@@ -116,23 +116,6 @@ export const getMyApplications = async (req, res) => {
   }
 };
 
-export const getApplicationsForJob = async (req, res) => {
-  try {
-    const job = await Job.findById(req.params.id);
-    if (!job) return res.status(404).json({ message: 'Job not found.' });
-
-    if (job.postedBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Forbidden: you can only view applications for your own jobs.' });
-    }
-
-    const applications = await Application.find({ job: req.params.id })
-      .populate('applicant', 'name email')
-      .sort({ createdAt: -1 });
-    res.json({ data: applications });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
 
 export const getReceivedApplications = async (req, res) => {
   const errors = validationResult(req);

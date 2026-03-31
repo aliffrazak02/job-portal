@@ -113,63 +113,6 @@ tags:
             schema:
               $ref: '#/components/schemas/ErrorResponse'
 
-/api/jobs/{id}/applications:
-  get:
-    summary: Get applications for a job
-    description: Employer-only. Returns all applications for a specific job listing owned by the authenticated employer. Each application includes the applicant's name and email.
-    tags: [Applications – Employer]
-    security:
-      - BearerAuth: []
-    parameters:
-      - in: path
-        name: id
-        required: true
-        description: MongoDB ObjectId of the job listing
-        schema:
-          type: string
-    responses:
-      200:
-        description: List of applications for the job
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Application'
-      400:
-        description: Invalid job id
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-      401:
-        description: Unauthorized (missing or invalid token)
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-      403:
-        description: Forbidden (not employer or does not own the job)
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-      404:
-        description: Job not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-      500:
-        description: Server error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-
 /api/jobs/{id}:
   put:
     summary: Update a job listing
