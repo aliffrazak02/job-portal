@@ -1,11 +1,62 @@
 tags:
-  - name: Jobs
-    description: Job listing management
+  - name: Jobs – Public
+    description: Browse and search job listings (no auth required)
+  - name: Jobs – Employer
+    description: Create, update, and delete your own job listings
+
+/api/jobs/search:
+  get:
+    summary: Search job listings
+    description: Public. Search jobs by keyword, location, and work type. Returns all matching results (no pagination).
+    tags: [Jobs – Public]
+    parameters:
+      - in: query
+        name: q
+        required: false
+        description: Keyword search across title, company, description, skills, and requirements
+        schema:
+          type: string
+        example: software engineer
+      - in: query
+        name: location
+        required: false
+        description: Filter by location (partial match, case-insensitive)
+        schema:
+          type: string
+        example: New York
+      - in: query
+        name: workType
+        required: false
+        description: Filter by work type
+        schema:
+          type: string
+          enum: [Full-time, Part-time, Contract, Internship]
+    responses:
+      200:
+        description: List of matching job listings
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/JobListing'
+                total:
+                  type: integer
+                  example: 5
+      500:
+        description: Server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
 
 /api/jobs:
   post:
     summary: Create a new job listing
-    tags: [Jobs]
+    tags: [Jobs – Employer]
     security:
       - BearerAuth: []
     requestBody:
@@ -36,11 +87,11 @@ tags:
             schema:
               $ref: '#/components/schemas/ErrorResponse'
       403:
-        description: Forbidden (not employer or not owner of job)
+        description: Forbidden (not an employer)
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'      
+              $ref: '#/components/schemas/ErrorResponse'
       500:
         description: Server error
         content:
@@ -50,7 +101,7 @@ tags:
 
   get:
     summary: Get paginated job listings
-    tags: [Jobs]
+    tags: [Jobs – Public]
     parameters:
       - in: query
         name: page
@@ -91,9 +142,9 @@ tags:
 
 /api/jobs/{id}/applications:
   get:
-    summary: Get all applications for a job
-    description: Employer-only. Returns all applications submitted for a job listing owned by the authenticated employer.
-    tags: [Jobs]
+    summary: Get applications for a job
+    description: Employer-only. Returns all applications for a specific job listing owned by the authenticated employer. Each application includes the applicant's name and email.
+    tags: [Applications – Employer]
     security:
       - BearerAuth: []
     parameters:
@@ -149,7 +200,7 @@ tags:
 /api/jobs/{id}:
   put:
     summary: Update a job listing
-    tags: [Jobs]
+    tags: [Jobs – Employer]
     security:
       - BearerAuth: []
     parameters:
@@ -232,7 +283,7 @@ tags:
 
   delete:
     summary: Delete a job listing
-    tags: [Jobs]
+    tags: [Jobs – Employer]
     security:
       - BearerAuth: []
     parameters:
