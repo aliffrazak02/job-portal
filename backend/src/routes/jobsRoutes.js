@@ -1,28 +1,10 @@
 import { Router } from 'express';
-import { body, query } from 'express-validator';
-import { createJob, getJobs, searchJobs, updateJob, deleteJob } from '../controllers/jobsController.js';
+import { body, query, param } from 'express-validator';
+import { createJob, getJobs, updateJob, deleteJob } from '../controllers/jobsController.js';
 import { getApplicationsForJob } from '../controllers/applicationsController.js';
 import protect, { authorizeRoles } from '../middleware/authMiddleware.js';
-import { param } from 'express-validator';
 
 const router = Router();
-
-/*
-    CRUD operations for job listings
-*/
-
-router.get(
-  '/search',
-  [
-    query('q').optional().isString().trim(),
-    query('location').optional().isString().trim(),
-    query('workType')
-      .optional()
-      .isIn(['Full-time', 'Part-time', 'Contract', 'Internship'])
-      .withMessage('Invalid work type'),
-  ],
-  searchJobs
-);
 
 router.post(
   '/',
@@ -45,6 +27,12 @@ router.post(
 router.get(
   '/',
   [
+    query('q').optional().isString().trim(),
+    query('location').optional().isString().trim(),
+    query('workType')
+      .optional()
+      .isIn(['Full-time', 'Part-time', 'Contract', 'Internship'])
+      .withMessage('Invalid work type'),
     query('page')
       .optional()
       .isInt({ min: 1 })

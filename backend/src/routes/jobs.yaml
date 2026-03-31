@@ -4,55 +4,6 @@ tags:
   - name: Jobs – Employer
     description: Create, update, and delete your own job listings
 
-/api/jobs/search:
-  get:
-    summary: Search job listings
-    description: Public. Search jobs by keyword, location, and work type. Returns all matching results (no pagination).
-    tags: [Jobs – Public]
-    parameters:
-      - in: query
-        name: q
-        required: false
-        description: Keyword search across title, company, description, skills, and requirements
-        schema:
-          type: string
-        example: software engineer
-      - in: query
-        name: location
-        required: false
-        description: Filter by location (partial match, case-insensitive)
-        schema:
-          type: string
-        example: New York
-      - in: query
-        name: workType
-        required: false
-        description: Filter by work type
-        schema:
-          type: string
-          enum: [Full-time, Part-time, Contract, Internship]
-    responses:
-      200:
-        description: List of matching job listings
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                data:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/JobListing'
-                total:
-                  type: integer
-                  example: 5
-      500:
-        description: Server error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-
 /api/jobs:
   post:
     summary: Create a new job listing
@@ -101,8 +52,30 @@ tags:
 
   get:
     summary: Get paginated job listings
+    description: Public. Returns paginated job listings. All filter params are optional — omitting them returns all jobs.
     tags: [Jobs – Public]
     parameters:
+      - in: query
+        name: q
+        required: false
+        description: Keyword search across title, company, description, skills, and requirements (case-insensitive)
+        schema:
+          type: string
+        example: software engineer
+      - in: query
+        name: location
+        required: false
+        description: Filter by location (partial match, case-insensitive)
+        schema:
+          type: string
+        example: New York
+      - in: query
+        name: workType
+        required: false
+        description: Filter by work type
+        schema:
+          type: string
+          enum: [Full-time, Part-time, Contract, Internship]
       - in: query
         name: page
         required: false
