@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body, query, param } from 'express-validator';
-import { createJob, getJobs, updateJob, deleteJob } from '../controllers/jobsController.js';
+import { createJob, getJobs, getMyJobs, updateJob, deleteJob } from '../controllers/jobsController.js';
 import protect, { authorizeRoles } from '../middleware/authMiddleware.js';
 
 const router = Router();
@@ -42,6 +42,28 @@ router.get(
       .withMessage('limit must be an integer between 1 and 100'),
   ],
   getJobs
+);
+
+router.get(
+  '/mine',
+  protect,
+  authorizeRoles('employer'),
+  [
+    query('q').optional().isString().trim(),
+    query('status')
+      .optional()
+      .isIn(['active', 'closed'])
+      .withMessage('status must be active or closed'),
+    query('page')
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage('page must be an integer greater than or equal to 1'),
+    query('limit')
+      .optional()
+      .isInt({ min: 1, max: 100 })
+      .withMessage('limit must be an integer between 1 and 100'),
+  ],
+  getMyJobs
 );
 
 router.put(
