@@ -11,6 +11,8 @@ import ApplicationForm from './components/ApplicationForm';
 import JobListings from './pages/JobListings';
 import JobSearch from './pages/JobSearch';
 import MyApplications from './pages/MyApplications';
+import JobDetail from './pages/JobDetail';
+import Industries from './pages/Industries';
 
 Placeholder.propTypes = { title: PropTypes.string.isRequired };
 function Placeholder({ title }) {
@@ -33,6 +35,8 @@ export default function App() {
           <Route path="/login" element={<><Link to="/" style={{display:'inline-block',padding:'1rem 1.5rem',fontWeight:600,color:'#2563eb',textDecoration:'none'}}>← Home</Link><LoginForm /></>} />
           <Route path="/register" element={<><Link to="/" style={{display:'inline-block',padding:'1rem 1.5rem',fontWeight:600,color:'#2563eb',textDecoration:'none'}}>← Home</Link><SignUp /></>} />
           <Route path="/jobs" element={<JobListings />} />
+          <Route path="/jobs/:id" element={<JobDetail />} />
+          <Route path="/industries" element={<Industries />} />
           <Route path="/search" element={<JobSearch />} />
           <Route path="/apply" element={<><Link to="/" style={{display:'inline-block',padding:'1rem 1.5rem',fontWeight:600,color:'#2563eb',textDecoration:'none'}}>← Home</Link><ApplicationForm /></>} />
           <Route path="/my-applications" element={<MyApplications />} />
