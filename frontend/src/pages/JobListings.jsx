@@ -124,9 +124,7 @@ const JobListings = () => {
                 salary={job.salaryRange ?? null}
                 postedDate={formatDate(job.postedAt ?? job.createdAt)}
                 skills={job.skills ?? job.requirements ?? []}
-                onApply={() =>
-                  navigate(`/apply?job=${encodeURIComponent(job.title)}&jobId=${job._id}`)
-                }
+                onApply={() => navigate(`/jobs/${job._id}`)}
               />
             ))
           ) : (
