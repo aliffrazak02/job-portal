@@ -1,10 +1,7 @@
 import path from 'path';
 import { mkdirSync } from 'fs';
 import multer from 'multer';
-<<<<<<< refactor/api
-=======
 import mongoose from 'mongoose';
->>>>>>> main
 import { validationResult } from 'express-validator';
 import Application from '../models/Application.js';
 import Job from '../models/Job.js';
@@ -124,18 +121,10 @@ export const getMyApplications = async (req, res) => {
   }
 };
 
-<<<<<<< refactor/api
 
 export const getReceivedApplications = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-=======
-export const getApplicationsForJob = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
->>>>>>> main
 
   try {
     const page = Number.parseInt(req.query.page, 10) || 1;
@@ -162,7 +151,6 @@ export const getApplicationsForJob = async (req, res) => {
       filter.job = req.query.jobId;
     }
 
-<<<<<<< refactor/api
     if (req.query.search) {
       const escaped = req.query.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const regex = new RegExp(escaped, 'i');
@@ -192,12 +180,6 @@ export const getApplicationsForJob = async (req, res) => {
         hasPrevPage: page > 1,
       },
     });
-=======
-    const applications = await Application.find({ job: req.params.id })
-      .populate('applicant', 'name email')
-      .sort({ createdAt: -1 });
-    res.json({ data: applications });
->>>>>>> main
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
