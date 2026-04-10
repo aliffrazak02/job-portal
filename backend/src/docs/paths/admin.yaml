@@ -33,8 +33,10 @@
 
 /api/admin/users:
   get:
-    summary: List all users
-    description: Returns a paginated list of all users. Supports search by name/email and filter by role.
+    summary: List all users or get a user by ID
+    description: >
+      When `id` is omitted, returns a paginated list of all users with optional search and role filter.
+      When `id` is provided as a path segment (`/api/admin/users/{id}`), returns a single user.
     tags: [Admin]
     security:
       - BearerAuth: []
@@ -70,11 +72,13 @@
           default: 10
     responses:
       200:
-        description: Paginated list of users
+        description: Paginated list of users, or a single user when called as `/api/admin/users/{id}`
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaginatedUsersResponse'
+              oneOf:
+                - $ref: '#/components/schemas/PaginatedUsersResponse'
+                - $ref: '#/components/schemas/AdminUser'
       400:
         description: Validation error
         content:
@@ -93,6 +97,12 @@
           application/json:
             schema:
               $ref: '#/components/schemas/ErrorResponse'
+      404:
+        description: User not found (only when id is provided)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
       500:
         description: Server error
         content:
@@ -101,56 +111,6 @@
               $ref: '#/components/schemas/ErrorResponse'
 
 /api/admin/users/{id}:
-  get:
-    summary: Get a user by ID
-    tags: [Admin]
-    security:
-      - BearerAuth: []
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-          pattern: '^[a-f0-9]{24}$'
-    responses:
-      200:
-        description: User details
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdminUser'
-      400:
-        description: Invalid ID
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ValidationErrorResponse'
-      401:
-        description: Unauthorized
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-      403:
-        description: Forbidden (admin role required)
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-      404:
-        description: User not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-      500:
-        description: Server error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-
   delete:
     summary: Delete a user
     description: Removes the user and cascades — deletes their jobs and applications (employer) or their applications (jobseeker).

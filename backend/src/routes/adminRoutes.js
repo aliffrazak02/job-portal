@@ -3,7 +3,6 @@ import { body, param, query } from 'express-validator';
 import {
   getStats,
   getUsers,
-  getUser,
   deleteUser,
   getJobs,
   deleteJob,
@@ -25,16 +24,15 @@ const paginationRules = [
 router.get('/stats', getStats);
 
 router.get(
-  '/users',
+  '/users/:id?',
   [
+    param('id').optional().isMongoId().withMessage('Invalid user id'),
     query('q').optional().isString().trim(),
     query('role').optional().isIn(['jobseeker', 'employer', 'admin']).withMessage('Invalid role'),
     ...paginationRules,
   ],
   getUsers
 );
-
-router.get('/users/:id', [param('id').isMongoId().withMessage('Invalid user id')], getUser);
 
 router.delete('/users/:id', [param('id').isMongoId().withMessage('Invalid user id')], deleteUser);
 
