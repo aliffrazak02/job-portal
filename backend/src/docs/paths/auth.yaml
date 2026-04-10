@@ -71,8 +71,6 @@
           application/json:
             schema:
               $ref: '#/components/schemas/ErrorResponse'
-            example:
-              message: Invalid credentials
       500:
         description: Server error
         content:
@@ -128,8 +126,6 @@
           application/json:
             schema:
               $ref: '#/components/schemas/MessageResponse'
-            example:
-              message: Password updated successfully
       400:
         description: Validation error
         content:
