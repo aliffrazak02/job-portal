@@ -41,7 +41,6 @@ const options = {
   apis: [
     join(__dirname, '../app.js'),
     join(__dirname, '../routes/*.js'),
-    join(__dirname, '../routes/*.yaml'),
     join(__dirname, '../docs/**/*.yaml'),
   ],
 };

@@ -1,207 +1,70 @@
-tags:
-  - name: Jobs
-    description: Job listing CRUD endpoints
-
-paths:
-  /api/jobs:
-    post:
-      summary: Create a new job listing
-      tags: [Jobs]
-      security:
-        - BearerAuth: []
-      description: Requires `employer` role.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateJobRequest'
-      responses:
-        201:
-          description: Job created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JobListing'
-        400:
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
-        401:
-          description: Not authenticated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        403:
-          description: Forbidden — employer role required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    get:
-      summary: List all job listings (paginated)
-      tags: [Jobs]
-      parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          description: Page number
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 10
-          description: Results per page
-      responses:
-        200:
-          description: Paginated list of jobs
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedJobsResponse'
-        400:
-          description: Validation error on query params
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
-  /api/jobs/{id}:
-    put:
-      summary: Update a job listing
-      tags: [Jobs]
-      security:
-        - BearerAuth: []
-      description: Employer only. You can only update your own listings.
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: MongoDB ObjectId of the job
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateJobRequest'
-      responses:
-        200:
-          description: Updated job
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JobListing'
-        400:
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
-        401:
-          description: Not authenticated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        403:
-          description: Forbidden — not your listing
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        404:
-          description: Job not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      summary: Delete a job listing
-      tags: [Jobs]
-      security:
-        - BearerAuth: []
-      description: Employer only. You can only delete your own listings.
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: MongoDB ObjectId of the job
-      responses:
-        200:
-          description: Job deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        400:
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
-        401:
-          description: Not authenticated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        403:
-          description: Forbidden — not your listing
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        404:
-          description: Job not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
 components:
   schemas:
     JobListing:
       type: object
+      required: [_id, title, company, location, description, workType, status, postedBy, postedAt, createdAt, updatedAt]
       properties:
         _id:
           type: string
+          description: MongoDB ObjectId of the job listing
           example: 665f1a2b3c4d5e6f7a8b9c0d
         title:
           type: string
+          description: Job title
           example: Software Engineer
         company:
           type: string
+          description: Name of the hiring company
           example: Tech Corp
         location:
           type: string
+          description: Office or work location
           example: New York, NY
         description:
           type: string
+          description: Full job description
           example: We are looking for a skilled Software Engineer...
         requirements:
           type: array
+          description: List of qualifications or experience requirements
           items:
             type: string
-          example: [3+ years of experience with Node.js..., Experience with MongoDB...]
+          example: [3+ years of experience with Node.js, Experience with MongoDB]
+        skills:
+          type: array
+          description: Specific technical or soft skills sought
+          items:
+            type: string
+          example: [Node.js, React, MongoDB]
+        responsibilities:
+          type: array
+          description: Day-to-day duties for the role
+          items:
+            type: string
+          example: [Design and implement REST APIs, Collaborate with frontend team]
         salaryRange:
           type: string
+          description: Indicative salary range for the role
           example: $80,000 - $120,000
         workType:
           type: string
           enum: [Full-time, Part-time, Contract, Internship]
+          description: Employment type
           example: Full-time
+        status:
+          type: string
+          enum: [active, closed]
+          description: Whether the listing is currently accepting applications
+          example: active
+        applicationDeadline:
+          type: string
+          format: date-time
+          description: Last date and time applications are accepted (optional)
+          example: '2025-07-01T00:00:00.000Z'
         postedBy:
           type: object
+          description: Employer who created the listing
+          required: [_id, name, email]
           properties:
             _id:
               type: string
@@ -213,116 +76,121 @@ components:
               type: string
               format: email
               example: alice@example.com
+        postedAt:
+          type: string
+          format: date-time
+          description: When the listing was first published
+          example: '2025-06-01T10:00:00.000Z'
+        createdAt:
+          type: string
+          format: date-time
+          description: Document creation timestamp (set by MongoDB)
+          example: '2025-06-01T10:00:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Document last-modified timestamp (set by MongoDB)
+          example: '2025-06-01T10:00:00.000Z'
 
     PaginatedJobsResponse:
       type: object
+      required: [data, pagination]
       properties:
         data:
           type: array
           items:
             $ref: '#/components/schemas/JobListing'
         pagination:
-          type: object
-          properties:
-            page:
-              type: integer
-              example: 1
-            limit:
-              type: integer
-              example: 10
-            totalItems:
-              type: integer
-              example: 25
-            totalPages:
-              type: integer
-              example: 3
-            hasNextPage:
-              type: boolean
-              example: true
-            hasPrevPage:
-              type: boolean
-              example: false
+          $ref: '#/components/schemas/Pagination'
 
     MyJobListing:
       type: object
-      description: A job listing as seen by its owner (no populated postedBy field)
+      description: A job listing as seen by its owner
+      required: [_id, title, company, location, description, workType, status, postedAt, createdAt, updatedAt]
       properties:
         _id:
           type: string
+          description: MongoDB ObjectId of the job listing
           example: 665f1a2b3c4d5e6f7a8b9c0d
         title:
           type: string
+          description: Job title
           example: Software Engineer
         company:
           type: string
+          description: Name of the hiring company
           example: Tech Corp
         location:
           type: string
+          description: Office or work location
           example: New York, NY
         description:
           type: string
+          description: Full job description
           example: We are looking for a skilled Software Engineer...
         requirements:
           type: array
+          description: List of qualifications or experience requirements
           items:
             type: string
           example: [3+ years of experience with Node.js, Experience with MongoDB]
+        skills:
+          type: array
+          description: Specific technical or soft skills sought
+          items:
+            type: string
+          example: [Node.js, React, MongoDB]
+        responsibilities:
+          type: array
+          description: Day-to-day duties for the role
+          items:
+            type: string
+          example: [Design and implement REST APIs, Collaborate with frontend team]
         salaryRange:
           type: string
+          description: Indicative salary range for the role
           example: $80,000 - $120,000
         workType:
           type: string
           enum: [Full-time, Part-time, Contract, Internship]
+          description: Employment type
           example: Full-time
         status:
           type: string
           enum: [active, closed]
+          description: Whether the listing is currently accepting applications
           example: active
-        postedAt:
-          type: string
-          format: date-time
-          example: '2025-06-01T10:00:00.000Z'
         applicationDeadline:
           type: string
           format: date-time
+          description: Last date and time applications are accepted (optional)
           example: '2025-07-01T00:00:00.000Z'
+        postedAt:
+          type: string
+          format: date-time
+          description: When the listing was first published
+          example: '2025-06-01T10:00:00.000Z'
         createdAt:
           type: string
           format: date-time
+          description: Document creation timestamp (set by MongoDB)
           example: '2025-06-01T10:00:00.000Z'
         updatedAt:
           type: string
           format: date-time
+          description: Document last-modified timestamp (set by MongoDB)
           example: '2025-06-01T10:00:00.000Z'
 
     PaginatedMyJobsResponse:
       type: object
+      required: [data, pagination]
       properties:
         data:
           type: array
           items:
             $ref: '#/components/schemas/MyJobListing'
         pagination:
-          type: object
-          properties:
-            page:
-              type: integer
-              example: 1
-            limit:
-              type: integer
-              example: 10
-            totalItems:
-              type: integer
-              example: 5
-            totalPages:
-              type: integer
-              example: 1
-            hasNextPage:
-              type: boolean
-              example: false
-            hasPrevPage:
-              type: boolean
-              example: false
+          $ref: '#/components/schemas/Pagination'
 
     CreateJobRequest:
       type: object
@@ -330,46 +198,107 @@ components:
       properties:
         title:
           type: string
+          description: Job title
           example: Software Engineer
         company:
           type: string
+          description: Name of the hiring company
           example: Tech Corp
         location:
           type: string
+          description: Office or work location
           example: New York, NY
         description:
           type: string
+          description: Full job description
           example: We are looking for a skilled Software Engineer...
         requirements:
           type: array
+          description: List of qualifications or experience requirements
           items:
             type: string
-          example: [3+ years of experience with Node.js..., Experience with MongoDB...]
+          example: [3+ years of experience with Node.js, Experience with MongoDB]
+        skills:
+          type: array
+          description: Specific technical or soft skills sought
+          items:
+            type: string
+          example: [Node.js, React, MongoDB]
+        responsibilities:
+          type: array
+          description: Day-to-day duties for the role
+          items:
+            type: string
+          example: [Design and implement REST APIs, Collaborate with frontend team]
         salaryRange:
           type: string
+          description: Indicative salary range for the role
           example: $80,000 - $120,000
         workType:
           type: string
           enum: [Full-time, Part-time, Contract, Internship]
+          description: Employment type
           example: Full-time
+        applicationDeadline:
+          type: string
+          format: date-time
+          description: Last date and time applications are accepted (optional)
+          example: '2025-07-01T00:00:00.000Z'
 
     UpdateJobRequest:
       type: object
+      description: All fields are optional; only provided fields will be updated
       properties:
         title:
           type: string
+          description: Job title
+          example: Senior Software Engineer
         company:
           type: string
+          description: Name of the hiring company
+          example: Tech Corp
         location:
           type: string
+          description: Office or work location
+          example: New York, NY
         description:
           type: string
+          description: Full job description
+          example: Updated job description
         requirements:
           type: array
+          description: List of qualifications or experience requirements
           items:
             type: string
+          example: [5+ years Node.js experience, MongoDB]
+        skills:
+          type: array
+          description: Specific technical or soft skills sought
+          items:
+            type: string
+          example: [Node.js, TypeScript, MongoDB]
+        responsibilities:
+          type: array
+          description: Day-to-day duties for the role
+          items:
+            type: string
+          example: [Lead API design, Mentor junior engineers]
         salaryRange:
           type: string
+          description: Indicative salary range for the role
+          example: $100,000 - $140,000
         workType:
           type: string
           enum: [Full-time, Part-time, Contract, Internship]
+          description: Employment type
+          example: Full-time
+        status:
+          type: string
+          enum: [active, closed]
+          description: Set to closed to stop accepting applications
+          example: active
+        applicationDeadline:
+          type: string
+          format: date-time
+          description: Last date and time applications are accepted
+          example: '2025-08-01T00:00:00.000Z'

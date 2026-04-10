@@ -1,9 +1,3 @@
-tags:
-  - name: Applications – Jobseeker
-    description: Submit applications and track your own
-  - name: Applications – Employer
-    description: Review applications received on your job listings
-
 /api/applications/mine:
   get:
     summary: Get my applications
@@ -238,6 +232,7 @@ tags:
         description: MongoDB ObjectId of the application
         schema:
           type: string
+          pattern: '^[a-f0-9]{24}$'
     requestBody:
       required: true
       content:
