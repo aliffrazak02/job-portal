@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header';
@@ -21,6 +22,7 @@ function GuestOnly({ children }) {
   if (user) return <Navigate to="/dashboard" replace />;
   return children;
 }
+GuestOnly.propTypes = { children: PropTypes.node.isRequired };
 
 function RequireAuth({ children }) {
   const { user, authLoading } = useAuth();
@@ -28,6 +30,7 @@ function RequireAuth({ children }) {
   if (!user) return <Navigate to="/login" replace />;
   return children;
 }
+RequireAuth.propTypes = { children: PropTypes.node.isRequired };
 
 function HomeRoute() {
   const { user, authLoading } = useAuth();
