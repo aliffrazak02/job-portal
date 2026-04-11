@@ -14,6 +14,7 @@ import MyApplications from './pages/MyApplications';
 import JobDetail from './pages/JobDetail';
 import Industries from './pages/Industries';
 import Dashboard from './pages/Dashboard';
+import CompanyProfile from './pages/CompanyProfile';
 
 Placeholder.propTypes = { title: PropTypes.string.isRequired };
 function Placeholder({ title }) {
@@ -129,6 +130,7 @@ function AppRoutes() {
           />
           <Route path="/my-applications" element={<MyApplications />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/companies/:companySlug" element={<CompanyProfile />} />
         </Routes>
       </main>
       <Footer />
