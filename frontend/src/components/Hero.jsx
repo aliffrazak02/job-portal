@@ -1,34 +1,20 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [heroQuery, setHeroQuery] = useState("");
-<<<<<<< HEAD
-  const [heroLocation, setHeroLocation] = useState("");
-=======
->>>>>>> 83456f16ca50745fb7e19e579b40b414a5c2c21a
-  const [heroWorkType, setHeroWorkType] = useState("");
+  const [keyword, setKeyword] = useState("");
 
-  const handleHeroSearch = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (heroQuery.trim()) params.set("q", heroQuery.trim());
-<<<<<<< HEAD
-    if (heroLocation.trim()) params.set("location", heroLocation.trim());
-=======
->>>>>>> 83456f16ca50745fb7e19e579b40b414a5c2c21a
-    if (heroWorkType) params.set("workType", heroWorkType);
-    navigate(`/search?${params.toString()}`);
+    const q = keyword.trim();
+    navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
   };
 
-<<<<<<< HEAD
   const handleTrending = (tag) => {
     navigate(`/search?q=${encodeURIComponent(tag)}`);
   };
-=======
->>>>>>> 83456f16ca50745fb7e19e579b40b414a5c2c21a
   return (
     <section className="jobboard-hero">
       <div className="jobboard-hero-bg-grid" />
@@ -57,35 +43,32 @@ const Hero = () => {
           </p>
 
           <div className="jobboard-hero-search-card">
-            <form className="jobboard-hero-search-grid" onSubmit={handleHeroSearch}>
+            <form className="jobboard-hero-search-grid" onSubmit={handleSearch}>
               <div className="jobboard-search-field">
                 <label>Job title or keyword</label>
                 <input
                   type="text"
                   placeholder="Frontend Developer, Designer, Marketing..."
-                  value={heroQuery}
-                  onChange={(e) => setHeroQuery(e.target.value)}
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
                 />
               </div>
 
               <div className="jobboard-search-field">
                 <label>Location</label>
-                <input
-                  type="text"
-                  placeholder="Toronto, Vancouver, Remote..."
-                  value={heroLocation}
-                  onChange={(e) => setHeroLocation(e.target.value)}
-                />
+                <input type="text" placeholder="Toronto, Vancouver, Remote..." />
               </div>
 
               <div className="jobboard-search-field">
                 <label>Work type</label>
-                <select value={heroWorkType} onChange={(e) => setHeroWorkType(e.target.value)}>
-                  <option value="">Select type</option>
-                  <option value="Full-time">Full-Time</option>
-                  <option value="Part-time">Part-Time</option>
-                  <option value="Internship">Internship</option>
-                  <option value="Contract">Contract</option>
+                <select defaultValue="">
+                  <option value="" disabled>
+                    Select type
+                  </option>
+                  <option>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Internship</option>
+                  <option>Contract</option>
                 </select>
               </div>
 
