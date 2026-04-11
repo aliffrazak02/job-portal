@@ -1,10 +1,11 @@
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
+  const tokenRef = useRef(token);
   const [user, setUser] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('user'));
@@ -18,9 +19,11 @@ export function AuthProvider({ children }) {
     if (nextToken) {
       localStorage.setItem('token', nextToken);
       setToken(nextToken);
+      tokenRef.current = nextToken;
     } else {
       localStorage.removeItem('token');
       setToken(null);
+      tokenRef.current = null;
     }
 
     if (nextUser) {
@@ -36,8 +39,9 @@ export function AuthProvider({ children }) {
     persistAuth(null, null);
   }, [persistAuth]);
 
-  const refreshMe = useCallback(async (incomingToken = token) => {
-    if (!incomingToken) {
+  const refreshMe = useCallback(async (incomingToken) => {
+    const activeToken = incomingToken ?? tokenRef.current;
+    if (!activeToken) {
       setAuthLoading(false);
       return null;
     }
@@ -45,7 +49,7 @@ export function AuthProvider({ children }) {
     try {
       const res = await fetch('/api/auth/me', {
         headers: {
-          Authorization: `Bearer ${incomingToken}`,
+          Authorization: `Bearer ${activeToken}`,
         },
       });
 
@@ -56,7 +60,7 @@ export function AuthProvider({ children }) {
       }
 
       const data = await res.json();
-      persistAuth(incomingToken, data);
+      persistAuth(activeToken, data);
       setAuthLoading(false);
       return data;
     } catch {
@@ -64,7 +68,7 @@ export function AuthProvider({ children }) {
       setAuthLoading(false);
       return null;
     }
-  }, [token, logout, persistAuth]);
+  }, [logout, persistAuth]);
 
   useEffect(() => {
     refreshMe();
@@ -81,9 +85,9 @@ export function AuthProvider({ children }) {
     if (!res.ok) throw new Error(data.message || 'Login failed');
 
     persistAuth(data.token, data.user);
-    await refreshMe(data.token);
+    setAuthLoading(false);
     return data.user;
-  }, [persistAuth, refreshMe]);
+  }, [persistAuth]);
 
   const register = useCallback(async (name, email, password, role) => {
     const res = await fetch('/api/auth/register', {
@@ -99,9 +103,9 @@ export function AuthProvider({ children }) {
     }
 
     persistAuth(data.token, data.user);
-    await refreshMe(data.token);
+    setAuthLoading(false);
     return data.user;
-  }, [persistAuth, refreshMe]);
+  }, [persistAuth]);
 
   return (
     <AuthContext.Provider
