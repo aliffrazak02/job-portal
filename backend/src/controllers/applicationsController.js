@@ -30,7 +30,7 @@ const fileFilter = (_req, file, cb) => {
 export const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 export const submitApplication = async (req, res) => {
@@ -42,6 +42,7 @@ export const submitApplication = async (req, res) => {
 
     const job = await Job.findById(jobId);
     if (!job) return res.status(404).json({ message: 'Job not found.' });
+
     if (job.status !== 'active') {
       return res.status(400).json({ message: 'This job is no longer accepting applications.' });
     }
@@ -76,7 +77,7 @@ export const getMyApplications = async (req, res) => {
 
     const [applications, totalItems] = await Promise.all([
       Application.find(filter)
-        .populate('job', 'title company location workType status')
+        .populate('job', 'title company location workType status salaryRange')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
@@ -101,7 +102,6 @@ export const getMyApplications = async (req, res) => {
   }
 };
 
-
 export const getReceivedApplications = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -117,7 +117,14 @@ export const getReceivedApplications = async (req, res) => {
     if (jobIds.length === 0) {
       return res.json({
         data: [],
-        pagination: { page, limit, totalItems: 0, totalPages: 1, hasNextPage: false, hasPrevPage: false },
+        pagination: {
+          page,
+          limit,
+          totalItems: 0,
+          totalPages: 1,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
       });
     }
 
@@ -127,7 +134,9 @@ export const getReceivedApplications = async (req, res) => {
 
     if (req.query.jobId) {
       const isOwned = jobIds.some((id) => id.toString() === req.query.jobId);
-      if (!isOwned) return res.status(403).json({ message: 'Forbidden: that job does not belong to you.' });
+      if (!isOwned) {
+        return res.status(403).json({ message: 'Forbidden: that job does not belong to you.' });
+      }
       filter.job = req.query.jobId;
     }
 
@@ -173,14 +182,46 @@ export const getApplicationStats = async (req, res) => {
     ]);
 
     const stats = { total: 0, pending: 0, reviewed: 0, shortlisted: 0, rejected: 0 };
+
     for (const { _id, count } of counts) {
-      if (_id in stats) stats[_id] = count;
+      if (_id in stats) {
+        stats[_id] = count;
+      }
       stats.total += count;
     }
 
     res.json(stats);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const withdrawMyApplication = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const application = await Application.findOne({
+      _id: req.params.id,
+      applicant: req.user._id,
+    });
+
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found.' });
+    }
+
+    const removedStatus = application.applicationStatus;
+    await application.deleteOne();
+
+    res.json({
+      message: 'Application withdrawn successfully.',
+      removedStatus,
+      applicationId: req.params.id,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message || 'Failed to withdraw application.' });
   }
 };
 
@@ -193,21 +234,29 @@ export const updateApplicationStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const allowed = ['pending', 'reviewed', 'shortlisted', 'rejected'];
+
     if (!allowed.includes(status)) {
-      return res.status(400).json({ message: `Status must be one of: ${allowed.join(', ')}.` });
+      return res.status(400).json({
+        message: `Status must be one of: ${allowed.join(', ')}.`,
+      });
     }
 
     const application = await Application.findById(req.params.id).populate('job');
     if (!application) return res.status(404).json({ message: 'Application not found.' });
 
     if (application.job.postedBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Forbidden: you can only update applications for your own jobs.' });
+      return res.status(403).json({
+        message: 'Forbidden: you can only update applications for your own jobs.',
+      });
     }
 
     application.applicationStatus = status;
     await application.save();
 
-    res.json({ message: 'Status updated.', applicationStatus: application.applicationStatus });
+    res.json({
+      message: 'Status updated.',
+      applicationStatus: application.applicationStatus,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
