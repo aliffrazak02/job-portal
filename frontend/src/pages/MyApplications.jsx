@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './MyApplications.css';
@@ -159,11 +159,7 @@ export default function MyApplications() {
     }
   }, [authLoading, loadPage]);
 
-  const sortedApplications = useMemo(() => {
-    return [...applications].sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-  }, [applications]);
+  const sortedApplications = applications;
 
   const handleWithdraw = async (applicationId) => {
     const confirmed = window.confirm('Are you sure you want to withdraw this application?');
@@ -214,20 +210,6 @@ export default function MyApplications() {
           <h1 className="myapps-title">My Applications</h1>
           <p className="myapps-subtitle">Track and manage your job applications</p>
           <div className="myapps-loading">Loading applications...</div>
-        </div>
-      </section>
-    );
-  }
-
-  if (!token || !user) {
-    return (
-      <section className="myapps-page">
-        <div className="myapps-shell">
-          <h1 className="myapps-title">My Applications</h1>
-          <p className="myapps-subtitle">Track and manage your job applications</p>
-          <div className="myapps-empty-card">
-            Please <Link to="/login">log in</Link> to view your applications.
-          </div>
         </div>
       </section>
     );

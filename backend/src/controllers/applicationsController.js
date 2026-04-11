@@ -77,7 +77,7 @@ export const getMyApplications = async (req, res) => {
 
     const [applications, totalItems] = await Promise.all([
       Application.find(filter)
-        .populate('job', 'title company location workType status salaryRange salaryMin salaryMax')
+        .populate('job', 'title company location workType status salaryRange')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
@@ -197,6 +197,11 @@ export const getApplicationStats = async (req, res) => {
 };
 
 export const withdrawMyApplication = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     const application = await Application.findOne({
       _id: req.params.id,
