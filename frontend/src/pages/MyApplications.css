@@ -1,164 +1,300 @@
-.ma-page {
-  max-width: 960px;
+.myapps-page {
+  min-height: calc(100vh - 140px);
+  background: #f5f7fb;
+  padding: 44px 0 72px;
+}
+
+.myapps-shell {
+  width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 48px 24px 80px;
 }
 
-.ma-header {
-  margin-bottom: 32px;
+.myapps-header {
+  margin-bottom: 24px;
 }
 
-.ma-title {
+.myapps-title {
   margin: 0 0 8px;
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-size: clamp(2.2rem, 4vw, 3.25rem);
+  line-height: 1.05;
   font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.03em;
+  color: #101828;
+  letter-spacing: -0.04em;
 }
 
-.ma-subtitle {
+.myapps-subtitle {
   margin: 0;
-  color: #64748b;
-  font-size: 1rem;
+  font-size: 1.02rem;
+  color: #667085;
 }
 
-.ma-loading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #64748b;
+.myapps-alert {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
   font-size: 0.95rem;
-  padding: 20px 0;
+  font-weight: 500;
 }
 
-.ma-spinner {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2.5px solid #e2e8f0;
-  border-top-color: #2563eb;
-  border-radius: 50%;
-  animation: ma-spin 0.7s linear infinite;
-  flex-shrink: 0;
+.myapps-alert-error {
+  background: #fef2f2;
+  color: #b42318;
+  border: 1px solid #fecaca;
 }
 
-@keyframes ma-spin {
-  to { transform: rotate(360deg); }
+.myapps-alert-success {
+  background: #ecfdf3;
+  color: #027a48;
+  border: 1px solid #abefc6;
 }
 
-.ma-error {
-  padding: 14px 18px;
-  border-radius: 12px;
-  background: rgba(239, 68, 68, 0.08);
-  color: #b91c1c;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  font-size: 0.95rem;
+.myapps-loading,
+.myapps-empty-card {
+  background: #ffffff;
+  border: 1px solid #eaecf0;
+  border-radius: 18px;
+  padding: 24px;
+  color: #475467;
 }
 
-.ma-empty {
-  color: #64748b;
-  font-size: 1rem;
-}
-
-.ma-empty a {
-  color: #2563eb;
-  font-weight: 600;
+.myapps-empty-card a,
+.myapps-browse-link {
+  color: #175cd3;
+  font-weight: 700;
   text-decoration: none;
 }
 
-.ma-empty a:hover {
+.myapps-browse-link:hover,
+.myapps-empty-card a:hover {
   text-decoration: underline;
 }
 
-/* ── Card list ── */
-.ma-list {
+.myapps-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.myapps-stat-card {
+  background: #ffffff;
+  border: 1px solid #eaecf0;
+  border-radius: 16px;
+  padding: 22px 20px;
+  min-height: 92px;
+}
+
+.myapps-stat-label {
+  margin: 0 0 10px;
+  font-size: 0.92rem;
+  color: #667085;
+}
+
+.myapps-stat-value {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 800;
+  color: #101828;
+}
+
+.myapps-stat-value-review {
+  color: #b54708;
+}
+
+.myapps-stat-value-interview {
+  color: #027a48;
+}
+
+.myapps-stat-value-rejected {
+  color: #d92d20;
+}
+
+.myapps-list {
   display: flex;
   flex-direction: column;
+  gap: 18px;
+}
+
+.myapps-card {
+  background: #ffffff;
+  border: 1px solid #eaecf0;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+}
+
+.myapps-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.myapps-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  min-width: 0;
+  flex: 1;
+}
+
+.myapps-job-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #175cd3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #d0d5dd;
+}
+
+.myapps-job-icon-svg {
+  width: 28px;
+  height: 28px;
+}
+
+.myapps-card-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.myapps-job-title {
+  margin: 0 0 6px;
+  font-size: 1.12rem;
+  line-height: 1.2;
+  font-weight: 800;
+  color: #101828;
+}
+
+.myapps-company-name {
+  margin: 0 0 12px;
+  font-size: 0.98rem;
+  color: #475467;
+}
+
+.myapps-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
-.ma-card {
-  padding: 20px 24px;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  transition: box-shadow 0.2s ease;
-}
-
-.ma-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-}
-
-.ma-card-header {
-  display: flex;
+.myapps-meta-item {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
+  gap: 8px;
+  color: #667085;
+  font-size: 0.92rem;
 }
 
-.ma-card-title {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-/* ── Status badges ── */
-.ma-status {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.ma-status--pending {
-  background: rgba(234, 179, 8, 0.12);
-  color: #92400e;
-}
-
-.ma-status--reviewed {
-  background: rgba(59, 130, 246, 0.1);
-  color: #1e40af;
-}
-
-.ma-status--shortlisted {
-  background: rgba(16, 185, 129, 0.1);
-  color: #047857;
-}
-
-.ma-status--rejected {
-  background: rgba(239, 68, 68, 0.1);
-  color: #b91c1c;
-}
-
-/* ── Meta row ── */
-.ma-card-meta {
-  display: flex;
+.myapps-meta-icon {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 0.88rem;
+  line-height: 1;
+}
+
+.myapps-withdraw-btn {
+  border: 1px solid #d0d5dd;
+  background: #ffffff;
+  color: #344054;
+  border-radius: 10px;
+  padding: 10px 18px;
+  min-width: 110px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.myapps-withdraw-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #98a2b3;
+}
+
+.myapps-withdraw-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.myapps-status-bar {
+  margin-top: 16px;
+  border-radius: 8px;
+  padding: 7px 16px;
   font-size: 0.9rem;
-  color: #64748b;
-  margin-bottom: 6px;
+  font-weight: 700;
+  width: min(860px, calc(100% - 76px));
+  margin-left: 76px;
 }
 
-.ma-badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 6px;
-  background: #f1f5f9;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #334155;
+.myapps-status-bar-pending {
+  background: #eef4ff;
+  color: #175cd3;
+  border: 1px solid #dbeafe;
 }
 
-.ma-card-date {
-  margin: 0;
-  font-size: 0.82rem;
-  color: #94a3b8;
+.myapps-status-bar-reviewing {
+  background: #fef3c7;
+  color: #b54708;
+  border: 1px solid #f6e0a6;
+}
+
+.myapps-status-bar-interview {
+  background: #dcfae6;
+  color: #027a48;
+  border: 1px solid #b7ebc6;
+}
+
+.myapps-status-bar-rejected {
+  background: #fee4e2;
+  color: #d92d20;
+  border: 1px solid #fecaca;
+}
+
+@media (max-width: 980px) {
+  .myapps-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .myapps-status-bar {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .myapps-shell {
+    width: min(100% - 24px, 1120px);
+  }
+
+  .myapps-page {
+    padding: 28px 0 56px;
+  }
+
+  .myapps-card {
+    padding: 18px;
+  }
+
+  .myapps-card-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .myapps-card-left {
+    gap: 14px;
+  }
+
+  .myapps-withdraw-btn {
+    width: 100%;
+  }
+
+  .myapps-stats-grid {
+    grid-template-columns: 1fr;
+  }
 }
