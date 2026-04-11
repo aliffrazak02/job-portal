@@ -2,6 +2,7 @@ import { validationResult } from 'express-validator';
 import Job from '../models/Job.js';
 import Application from '../models/Application.js';
 
+
 export const createJob = async (req, res) => {
   const { title, company, location, description, requirements, salaryRange, workType } = req.body;
   const errors = validationResult(req);
@@ -237,5 +238,66 @@ export const deleteJob = async (req, res) => {
     res.json({ message: 'Job deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const getCompanyBySlug = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+      });
+    }
+
+    const { companySlug } = req.params;
+
+    const normalizeToSlug = (value = '') =>
+      value
+        .toLowerCase()
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+    const allJobs = await Job.find({});
+
+    const matchingJobs = allJobs.filter(
+      (job) => normalizeToSlug(job.company || '') === companySlug
+    );
+
+    if (matchingJobs.length === 0) {
+      return res.status(404).json({
+        message: 'Company not found',
+      });
+    }
+
+    const firstJob = matchingJobs[0];
+
+    const company = {
+      name: firstJob.company,
+      tagline: firstJob.companyTagline || 'Find your next opportunity with this company.',
+      description:
+        firstJob.companyDescription ||
+        `${firstJob.company} is actively hiring. Browse open roles and learn more about the company.`,
+      industry: firstJob.industry || 'Technology',
+      headquarters: firstJob.headquarters || firstJob.location || 'Not listed',
+      website: firstJob.companyWebsite || '',
+      size: firstJob.companySize || 'Not listed',
+      founded: firstJob.companyFounded || 'Not listed',
+      whyJoin:
+        firstJob.whyJoin ||
+        `Explore opportunities at ${firstJob.company} and join a team working on meaningful projects.`,
+    };
+
+    return res.status(200).json({
+      company,
+      jobs: matchingJobs,
+    });
+  } catch (error) {
+    console.error('Error fetching company by slug:', error);
+    return res.status(500).json({
+      message: 'Server error while fetching company profile',
+    });
   }
 };
