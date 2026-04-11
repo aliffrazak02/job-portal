@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header';
@@ -16,14 +15,18 @@ import Industries from './pages/Industries';
 import Dashboard from './pages/Dashboard';
 import CompanyProfile from './pages/CompanyProfile';
 
-Placeholder.propTypes = { title: PropTypes.string.isRequired };
-function Placeholder({ title }) {
-  return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h2>{title}</h2>
-      <Link to="/">← Home</Link>
-    </div>
-  );
+function GuestOnly({ children }) {
+  const { user, authLoading } = useAuth();
+  if (authLoading) return null;
+  if (user) return <Navigate to="/dashboard" replace />;
+  return children;
+}
+
+function RequireAuth({ children }) {
+  const { user, authLoading } = useAuth();
+  if (authLoading) return null;
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
 }
 
 function HomeRoute() {
@@ -67,7 +70,7 @@ function AppRoutes() {
           <Route
             path="/login"
             element={
-              <>
+              <GuestOnly>
                 <Link
                   to="/"
                   style={{
@@ -81,13 +84,13 @@ function AppRoutes() {
                   ← Home
                 </Link>
                 <LoginForm />
-              </>
+              </GuestOnly>
             }
           />
           <Route
             path="/register"
             element={
-              <>
+              <GuestOnly>
                 <Link
                   to="/"
                   style={{
@@ -101,7 +104,7 @@ function AppRoutes() {
                   ← Home
                 </Link>
                 <SignUp />
-              </>
+              </GuestOnly>
             }
           />
           <Route path="/jobs" element={<JobListings />} />
@@ -111,7 +114,7 @@ function AppRoutes() {
           <Route
             path="/apply"
             element={
-              <>
+              <RequireAuth>
                 <Link
                   to="/"
                   style={{
@@ -125,11 +128,11 @@ function AppRoutes() {
                   ← Home
                 </Link>
                 <ApplicationForm />
-              </>
+              </RequireAuth>
             }
           />
-          <Route path="/my-applications" element={<MyApplications />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/my-applications" element={<RequireAuth><MyApplications /></RequireAuth>} />
+          <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
           <Route path="/companies/:companySlug" element={<CompanyProfile />} />
         </Routes>
       </main>
