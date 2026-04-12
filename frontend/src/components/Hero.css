@@ -1,45 +1,50 @@
 .jobboard-hero {
   position: relative;
   overflow: hidden;
-  padding: 88px 20px 48px;
-  background: linear-gradient(135deg, #07111f 0%, #0b1730 40%, #10224b 100%);
-  color: white;
+  padding: 96px 24px 72px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.18), transparent 22%),
+    radial-gradient(circle at 85% 18%, rgba(14, 165, 233, 0.12), transparent 22%),
+    linear-gradient(135deg, #041227 0%, #081a38 42%, #0b2350 100%);
+  color: #fff;
+}
+
+.jobboard-hero-bg-grid,
+.jobboard-hero-bg-glow {
+  position: absolute;
+  pointer-events: none;
 }
 
 .jobboard-hero-bg-grid {
-  position: absolute;
   inset: 0;
+  opacity: 0.28;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
   background-size: 42px 42px;
-  opacity: 0.35;
-  mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
-  pointer-events: none;
+  mask-image: radial-gradient(circle at center, black 48%, transparent 100%);
 }
 
 .jobboard-hero-bg-glow {
-  position: absolute;
   border-radius: 999px;
   filter: blur(90px);
-  opacity: 0.35;
-  pointer-events: none;
+  opacity: 0.32;
 }
 
 .jobboard-hero-bg-glow-one {
-  width: 340px;
-  height: 340px;
+  top: 80px;
+  left: -80px;
+  width: 320px;
+  height: 320px;
   background: #2563eb;
-  top: 60px;
-  left: -60px;
 }
 
 .jobboard-hero-bg-glow-two {
+  top: 120px;
+  right: -90px;
   width: 360px;
   height: 360px;
   background: #0ea5e9;
-  right: -60px;
-  top: 120px;
 }
 
 .jobboard-hero-container {
@@ -48,8 +53,8 @@
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.08fr 0.92fr;
-  gap: 50px;
+  grid-template-columns: minmax(0, 1.02fr) minmax(460px, 0.98fr);
+  gap: 72px;
   align-items: center;
 }
 
@@ -61,7 +66,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .jobboard-hero-badge,
@@ -72,260 +77,310 @@
   border-radius: 999px;
   font-size: 0.88rem;
   font-weight: 700;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 }
 
 .jobboard-hero-badge {
   background: rgba(59, 130, 246, 0.16);
-  color: #bfdbfe;
-  border: 1px solid rgba(147, 197, 253, 0.24);
+  color: #dbeafe;
+  border: 1px solid rgba(147, 197, 253, 0.26);
 }
 
 .jobboard-hero-badge-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.84);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.86);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .jobboard-hero-title {
   margin: 0;
-  font-size: clamp(3rem, 6vw, 5.4rem);
-  line-height: 1.02;
-  letter-spacing: -0.05em;
+  font-size: clamp(3.4rem, 6vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
   font-weight: 850;
+  max-width: 760px;
 }
 
 .jobboard-hero-title span {
   display: block;
-  color: #93c5fd;
+  color: #9bc5ff;
 }
 
 .jobboard-hero-description {
-  margin: 24px 0 0;
-  max-width: 650px;
+  margin: 28px 0 0;
+  max-width: 620px;
   font-size: 1.08rem;
-  line-height: 1.9;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.jobboard-hero-search-card {
-  margin-top: 30px;
-  padding: 22px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 50px rgba(2, 6, 23, 0.2);
-}
-
-.jobboard-hero-search-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 0.9fr auto;
-  gap: 14px;
-  align-items: end;
-}
-
-.jobboard-search-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.jobboard-search-field label {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.82);
-  font-weight: 600;
-}
-
-.jobboard-search-field input,
-.jobboard-search-field select {
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.94);
-  color: #0f172a;
-  border-radius: 16px;
-  padding: 15px 16px;
-  font-size: 0.98rem;
-  outline: none;
-}
-
-.jobboard-search-field input::placeholder {
-  color: #94a3b8;
-}
-
-.jobboard-search-btn {
-  height: 52px;
-  border: none;
-  border-radius: 16px;
-  padding: 0 22px;
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
-}
-
-.jobboard-trending-row {
-  margin-top: 16px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-}
-
-.jobboard-trending-label {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #bfdbfe;
-}
-
-.jobboard-trending-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.jobboard-trending-tags span {
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.88rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .jobboard-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-top: 28px;
+  margin-top: 30px;
 }
 
 .jobboard-hero-primary-btn,
 .jobboard-hero-secondary-btn {
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
   padding: 15px 24px;
   border-radius: 16px;
+  text-decoration: none;
   font-weight: 700;
-  transition: all 0.22s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .jobboard-hero-primary-btn {
-  color: white;
+  color: #fff;
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.28);
 }
 
-.jobboard-hero-primary-btn:hover {
+.jobboard-hero-primary-btn:hover,
+.jobboard-hero-secondary-btn:hover,
+.jobboard-trending-chip:hover {
   transform: translateY(-2px);
 }
 
 .jobboard-hero-secondary-btn {
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
   background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .jobboard-hero-secondary-btn:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.jobboard-trending-panel {
+  margin-top: 34px;
+  padding: 28px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 22px 50px rgba(2, 6, 23, 0.22);
+}
+
+.jobboard-trending-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.jobboard-trending-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #93c5fd;
+}
+
+.jobboard-trending-top h3 {
+  margin: 0 0 8px;
+  font-size: 1.9rem;
+}
+
+.jobboard-trending-top p {
+  margin: 0;
+  max-width: 650px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.jobboard-trending-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.16);
+  border: 1px solid rgba(147, 197, 253, 0.24);
+  color: #dbeafe;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.jobboard-trending-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #60a5fa;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.8);
+}
+
+.jobboard-trending-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.jobboard-trending-chip {
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.94rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.jobboard-trending-chip:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(147, 197, 253, 0.3);
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+}
+
+.jobboard-trending-insights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.jobboard-trending-card {
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jobboard-trending-card-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #93c5fd;
+}
+
+.jobboard-trending-card strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+}
+
+.jobboard-trending-card p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .jobboard-hero-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  margin-top: 34px;
+  margin-top: 28px;
 }
 
 .jobboard-stat-card {
   padding: 20px;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
 }
 
 .jobboard-stat-card h3 {
   margin: 0 0 8px;
   font-size: 1.9rem;
-  color: white;
+  color: #fff;
 }
 
 .jobboard-stat-card p {
   margin: 0;
   font-size: 0.95rem;
-  line-height: 1.6;
+  line-height: 1.55;
   color: rgba(255, 255, 255, 0.72);
-}
-
-.jobboard-company-strip {
-  margin-top: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px;
-}
-
-.jobboard-company-strip-label {
-  font-size: 0.92rem;
-  color: rgba(255, 255, 255, 0.72);
-  font-weight: 600;
-}
-
-.jobboard-company-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.jobboard-company-list span {
-  padding: 9px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 0.9rem;
-  font-weight: 600;
 }
 
 .jobboard-hero-right {
   position: relative;
-  min-height: 720px;
+  min-height: 760px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+}
+
+.jobboard-orbit {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid rgba(147, 197, 253, 0.12);
+  pointer-events: none;
+}
+
+.jobboard-orbit-one {
+  width: 640px;
+  height: 640px;
+  opacity: 0.22;
+}
+
+.jobboard-orbit-two {
+  width: 520px;
+  height: 520px;
+  opacity: 0.16;
 }
 
 .jobboard-dashboard-card {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 540px;
+  max-width: 560px;
+  padding: 30px;
   border-radius: 30px;
-  padding: 28px;
-  background: rgba(255, 255, 255, 0.95);
   color: #0f172a;
+  background: rgba(255, 255, 255, 0.97);
   box-shadow:
-    0 30px 80px rgba(2, 6, 23, 0.35),
-    0 10px 30px rgba(37, 99, 235, 0.15);
+    0 34px 80px rgba(2, 6, 23, 0.34),
+    0 12px 30px rgba(37, 99, 235, 0.12);
+}
+
+.jobboard-dashboard-header,
+.jobboard-featured-role-top,
+.jobboard-progress-header,
+.jobboard-section-head,
+.jobboard-salary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .jobboard-dashboard-header {
-  display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
 }
 
+.jobboard-section-head {
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .jobboard-mini-label {
   display: inline-block;
+  margin-bottom: 8px;
   font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #64748b;
-  margin-bottom: 8px;
 }
 
 .jobboard-mini-label.blue {
@@ -335,6 +390,7 @@
 .jobboard-dashboard-header h3 {
   margin: 0;
   font-size: 1.6rem;
+  line-height: 1.2;
 }
 
 .jobboard-dashboard-status {
@@ -348,56 +404,54 @@
 }
 
 .jobboard-dashboard-summary {
-  margin-top: 22px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+  margin-top: 22px;
+}
+
+.jobboard-summary-box,
+.jobboard-progress-block,
+.jobboard-insight-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
 }
 
 .jobboard-summary-box {
-  padding: 16px;
+  padding: 18px 16px;
   border-radius: 18px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
   text-align: center;
 }
 
 .jobboard-summary-box strong {
   display: block;
-  font-size: 1.35rem;
   margin-bottom: 6px;
+  font-size: 1.45rem;
 }
 
 .jobboard-summary-box span {
   font-size: 0.9rem;
-  color: #64748b;
   font-weight: 600;
+  color: #64748b;
 }
 
 .jobboard-featured-role {
   margin-top: 22px;
-  padding: 20px;
-  border-radius: 22px;
-  background: linear-gradient(180deg, #eff6ff 0%, #f8fbff 100%);
+  padding: 22px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #eef5ff 0%, #f8fbff 100%);
   border: 1px solid #dbeafe;
-}
-
-.jobboard-featured-role-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
 }
 
 .jobboard-featured-role h4 {
   margin: 0 0 6px;
-  font-size: 1.35rem;
+  font-size: 1.55rem;
 }
 
 .jobboard-featured-role p {
   margin: 0;
-  color: #64748b;
   line-height: 1.5;
+  color: #64748b;
 }
 
 .jobboard-match-badge {
@@ -405,32 +459,29 @@
   border-radius: 999px;
   background: #dbeafe;
   color: #1d4ed8;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 800;
   white-space: nowrap;
 }
 
 .jobboard-salary-row {
-  margin-top: 14px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 0.92rem;
-  color: #334155;
+  margin-top: 16px;
+  font-size: 0.94rem;
   font-weight: 700;
+  color: #334155;
 }
 
 .jobboard-skill-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 .jobboard-skill-tags span {
   padding: 8px 12px;
   border-radius: 999px;
-  background: white;
+  background: #fff;
   border: 1px solid #dbeafe;
   color: #2563eb;
   font-size: 0.88rem;
@@ -441,26 +492,21 @@
   margin-top: 22px;
   padding: 18px;
   border-radius: 20px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
 }
 
 .jobboard-progress-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  margin-bottom: 12px;
   font-size: 0.95rem;
   font-weight: 700;
   color: #334155;
-  margin-bottom: 12px;
 }
 
 .jobboard-progress-bar {
   width: 100%;
   height: 12px;
+  overflow: hidden;
   border-radius: 999px;
   background: #dbeafe;
-  overflow: hidden;
 }
 
 .jobboard-progress-fill {
@@ -472,21 +518,13 @@
 
 .jobboard-progress-block p {
   margin: 10px 0 0;
-  color: #64748b;
   font-size: 0.92rem;
   line-height: 1.6;
+  color: #64748b;
 }
 
 .jobboard-activity-section {
   margin-top: 22px;
-}
-
-.jobboard-section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
 }
 
 .jobboard-section-head h5 {
@@ -523,9 +561,9 @@
 .jobboard-activity-dot {
   width: 12px;
   height: 12px;
+  margin-top: 6px;
   border-radius: 999px;
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  margin-top: 6px;
   flex-shrink: 0;
 }
 
@@ -535,7 +573,8 @@
   font-size: 0.98rem;
 }
 
-.jobboard-activity-item p {
+.jobboard-activity-item p,
+.jobboard-insight-card p {
   margin: 0;
   color: #64748b;
   font-size: 0.93rem;
@@ -552,8 +591,6 @@
 .jobboard-insight-card {
   padding: 16px;
   border-radius: 18px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
 }
 
 .jobboard-insight-card span {
@@ -570,189 +607,126 @@
   margin-bottom: 6px;
 }
 
-.jobboard-insight-card p {
-  margin: 0;
-  color: #64748b;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.jobboard-floating-card {
+.jobboard-side-note {
   position: absolute;
-  z-index: 1;
-  max-width: 230px;
+  width: 200px;
   padding: 18px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.24);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.16);
+  z-index: 1;
 }
 
-.jobboard-floating-card span {
-  display: block;
-  font-size: 0.8rem;
+.jobboard-side-note span {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #bfdbfe;
-  margin-bottom: 6px;
-  font-weight: 700;
 }
 
-.jobboard-floating-card strong {
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 6px;
-  color: white;
-}
-
-.jobboard-floating-card p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.74);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-.jobboard-floating-card-one {
-  top: 30px;
-  left: -20px;
-}
-
-.jobboard-floating-card-two {
-  right: -10px;
-  top: 170px;
-}
-
-.jobboard-floating-card-three {
-  left: 0;
-  bottom: 40px;
-}
-
-.jobboard-hero-bottom {
-  position: relative;
-  z-index: 2;
-  max-width: 1280px;
-  margin: 36px auto 0;
-}
-
-.jobboard-hero-bottom-card {
-  border-radius: 28px;
-  padding: 28px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px);
-}
-
-.jobboard-hero-bottom-card h4 {
-  margin: 0 0 18px;
-  font-size: 1.35rem;
-}
-
-.jobboard-benefit-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.jobboard-benefit-item {
-  padding: 18px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.jobboard-benefit-item strong {
+.jobboard-side-note strong {
   display: block;
   margin-bottom: 8px;
   font-size: 1rem;
+  color: #fff;
 }
 
-.jobboard-benefit-item p {
+.jobboard-side-note p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.65;
-  font-size: 0.94rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.jobboard-side-note-top {
+  top: 110px;
+  left: -6px;
+}
+
+.jobboard-side-note-bottom {
+  right: 0;
+  bottom: 110px;
+}
+
+@media (max-width: 1320px) {
+  .jobboard-side-note {
+    display: none;
+  }
 }
 
 @media (max-width: 1150px) {
   .jobboard-hero-container {
     grid-template-columns: 1fr;
+    gap: 48px;
   }
 
   .jobboard-hero-right {
     min-height: auto;
-    margin-top: 10px;
   }
 
-  .jobboard-benefit-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .jobboard-trending-insights,
+  .jobboard-hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .jobboard-floating-card-one,
-  .jobboard-floating-card-two,
-  .jobboard-floating-card-three {
-    position: static;
-    margin-top: 14px;
-    max-width: 100%;
+  .jobboard-orbit-one,
+  .jobboard-orbit-two {
+    display: none;
   }
 }
 
 @media (max-width: 900px) {
-  .jobboard-hero-search-grid {
-    grid-template-columns: 1fr;
+  .jobboard-hero {
+    padding: 82px 18px 44px;
   }
 
-  .jobboard-search-btn {
-    width: 100%;
+  .jobboard-trending-top {
+    flex-direction: column;
   }
 
-  .jobboard-hero-stats {
-    grid-template-columns: 1fr;
-  }
-
+  .jobboard-trending-insights,
+  .jobboard-hero-stats,
   .jobboard-dashboard-summary,
   .jobboard-insights-row {
     grid-template-columns: 1fr;
+  }
+
+  .jobboard-hero-title {
+    font-size: 2.8rem;
   }
 }
 
 @media (max-width: 640px) {
   .jobboard-hero {
-    padding: 72px 16px 32px;
+    padding: 72px 16px 36px;
   }
 
-  .jobboard-hero-title {
-    font-size: 2.6rem;
-  }
-
-  .jobboard-hero-actions {
+  .jobboard-hero-actions,
+  .jobboard-dashboard-header,
+  .jobboard-featured-role-top,
+  .jobboard-salary-row,
+  .jobboard-section-head {
     flex-direction: column;
   }
 
   .jobboard-hero-primary-btn,
-  .jobboard-hero-secondary-btn {
+  .jobboard-hero-secondary-btn,
+  .jobboard-trending-chip {
     width: 100%;
     text-align: center;
   }
 
-  .jobboard-company-strip {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .jobboard-dashboard-header,
-  .jobboard-featured-role-top,
-  .jobboard-salary-row {
-    flex-direction: column;
-  }
-
-  .jobboard-benefit-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .jobboard-dashboard-card,
-  .jobboard-hero-search-card,
-  .jobboard-hero-bottom-card {
+  .jobboard-trending-panel,
+  .jobboard-dashboard-card {
     padding: 20px;
+  }
+
+  .jobboard-hero-title {
+    font-size: 2.45rem;
   }
 }
