@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './EmployerDashboard.css';
+import { API } from '../api.js';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
@@ -76,7 +77,7 @@ function PostJobModal({ token, user, onClose, onPosted }) {
           .filter(Boolean);
       }
 
-      const res = await fetch(`/api/jobs`, {
+      const res = await fetch(`${API}/api/jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -223,7 +224,7 @@ export default function EmployerDashboard() {
   const fetchDashboard = useCallback(async () => {
     setLoadError(null);
     try {
-      const res = await fetch(`/api/jobs/employer-dashboard`, {
+      const res = await fetch(`${API}/api/jobs/employer-dashboard`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to load dashboard');

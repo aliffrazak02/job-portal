@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './EmployerProfile.css';
+import { API } from '../api.js';
 
 export default function EmployerProfile() {
   const { token, user, persistAuth } = useAuth();
@@ -44,7 +45,7 @@ export default function EmployerProfile() {
       if (form.websiteUrl.trim()) profilePatch.websiteUrl = form.websiteUrl.trim();
       if (form.companyLogoUrl.trim()) profilePatch.companyLogoUrl = form.companyLogoUrl.trim();
 
-      const res = await fetch(`/api/profile`, {
+      const res = await fetch(`${API}/api/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

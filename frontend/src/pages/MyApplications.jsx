@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './MyApplications.css';
+import { API } from '../api.js';
 
 const STATUS_UI = {
   pending: {
@@ -114,12 +115,12 @@ export default function MyApplications() {
       setSuccessMessage('');
 
       const [statsRes, appsRes] = await Promise.all([
-        fetch('/api/applications/stats', {
+        fetch(`${API}/api/applications/stats`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }),
-        fetch('/api/applications/mine?limit=50', {
+        fetch(`${API}/api/applications/mine?limit=50`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -170,7 +171,7 @@ export default function MyApplications() {
       setActionError('');
       setSuccessMessage('');
 
-      const res = await fetch(`/api/applications/mine/${applicationId}`, {
+      const res = await fetch(`${API}/api/applications/mine/${applicationId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

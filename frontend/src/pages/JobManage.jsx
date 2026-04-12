@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './JobManage.css';
+import { API } from '../api.js';
 
 const STATUSES = ['pending', 'reviewed', 'shortlisted', 'rejected'];
 const WORK_TYPES = ['Full-time', 'Part-time', 'Contract', 'Internship'];
@@ -43,7 +44,7 @@ export default function JobManage() {
   /* ── Fetch job ── */
   useEffect(() => {
     setLoadingJob(true);
-    fetch(`/api/jobs/${id}`, {
+    fetch(`${API}/api/jobs/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => r.json())
@@ -72,7 +73,7 @@ export default function JobManage() {
   /* ── Fetch applications ── */
   useEffect(() => {
     setLoadingApps(true);
-    fetch(`/api/applications/received?jobId=${id}&limit=100`, {
+    fetch(`${API}/api/applications/received?jobId=${id}&limit=100`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => r.json())
@@ -109,7 +110,7 @@ export default function JobManage() {
           .filter(Boolean);
       }
 
-      const res = await fetch(`/api/jobs/${id}`, {
+      const res = await fetch(`${API}/api/jobs/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +133,7 @@ export default function JobManage() {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      const res = await fetch(`/api/jobs/${id}`, {
+      const res = await fetch(`${API}/api/jobs/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -151,7 +152,7 @@ export default function JobManage() {
   /* ── Status update ── */
   const handleStatusChange = async (appId, newStatus) => {
     try {
-      const res = await fetch(`/api/applications/${appId}/status`, {
+      const res = await fetch(`${API}/api/applications/${appId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

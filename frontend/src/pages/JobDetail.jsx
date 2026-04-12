@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./JobDetail.css";
+import { API } from '../api.js';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
@@ -30,7 +31,7 @@ const JobDetail = () => {
 
   const fetchComments = useCallback(async () => {
     try {
-      const res = await fetch(`/api/comments/job/${id}`);
+      const res = await fetch(`${API}/api/comments/job/${id}`);
       if (res.ok) {
         const data = await res.json();
         setComments(data.data || []);
@@ -42,7 +43,7 @@ const JobDetail = () => {
     const fetchJob = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/jobs/${id}`);
+        const res = await fetch(`${API}/api/jobs/${id}`);
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         const data = await res.json();
         setJob(data);
@@ -156,7 +157,7 @@ const JobDetail = () => {
                     if (!commentText.trim()) return;
                     setCommentLoading(true);
                     try {
-                      const res = await fetch('/api/comments', {
+                      const res = await fetch(`${API}/api/comments`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                         body: JSON.stringify({ content: commentText.trim(), jobId: id }),
@@ -230,7 +231,7 @@ const JobDetail = () => {
                               if (!replyText.trim()) return;
                               setCommentLoading(true);
                               try {
-                                const res = await fetch('/api/comments', {
+                                const res = await fetch(`${API}/api/comments`, {
                                   method: 'POST',
                                   headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                                   body: JSON.stringify({ content: replyText.trim(), jobId: id, parentCommentId: comment._id }),

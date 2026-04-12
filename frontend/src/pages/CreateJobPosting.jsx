@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './CreateJobPosting.css';
+import { API } from '../api.js';
 
 const WORK_TYPES = ['Full-time', 'Part-time', 'Contract', 'Internship'];
 
@@ -48,7 +49,7 @@ export default function CreateJobPosting() {
           .filter(Boolean);
       }
 
-      const res = await fetch(`/api/jobs`, {
+      const res = await fetch(`${API}/api/jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

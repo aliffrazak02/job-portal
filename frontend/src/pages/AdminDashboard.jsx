@@ -6,6 +6,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
 import './AdminDashboard.css';
+import { API } from '../api.js';
 
 const COLORS = ['#2563eb', '#16a34a', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
@@ -32,8 +33,8 @@ const AdminDashboard = () => {
     const hdrs = { Authorization: `Bearer ${token}` };
     try {
       const [statsRes, activityRes] = await Promise.all([
-        fetch('/api/admin/stats', { headers: hdrs }),
-        fetch('/api/admin/activity?days=30', { headers: hdrs }),
+        fetch(`${API}/api/admin/stats`, { headers: hdrs }),
+        fetch(`${API}/api/admin/activity?days=30`, { headers: hdrs }),
       ]);
       const [statsData, activityData] = await Promise.all([
         statsRes.json(), activityRes.json(),
@@ -71,7 +72,7 @@ const AdminDashboard = () => {
   const fetchUsers = useCallback(async () => {
     const hdrs = { Authorization: `Bearer ${token}` };
     try {
-      const res = await fetch('/api/admin/users?limit=100', { headers: hdrs });
+      const res = await fetch(`${API}/api/admin/users?limit=100`, { headers: hdrs });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       setUsers(data.data || []);
@@ -83,7 +84,7 @@ const AdminDashboard = () => {
   const fetchJobs = useCallback(async () => {
     const hdrs = { Authorization: `Bearer ${token}` };
     try {
-      const res = await fetch('/api/admin/jobs?limit=100', { headers: hdrs });
+      const res = await fetch(`${API}/api/admin/jobs?limit=100`, { headers: hdrs });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       setJobs(data.data || []);
@@ -95,7 +96,7 @@ const AdminDashboard = () => {
   const fetchApplications = useCallback(async () => {
     const hdrs = { Authorization: `Bearer ${token}` };
     try {
-      const res = await fetch('/api/admin/applications?limit=100', { headers: hdrs });
+      const res = await fetch(`${API}/api/admin/applications?limit=100`, { headers: hdrs });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       setApplications(data.data || []);
@@ -116,7 +117,7 @@ const AdminDashboard = () => {
 
   const toggleUserActive = async (userId) => {
     try {
-      const res = await fetch(`/api/admin/users/${userId}/toggle-active`, {
+      const res = await fetch(`${API}/api/admin/users/${userId}/toggle-active`, {
         method: 'PATCH',
         headers,
       });
@@ -131,7 +132,7 @@ const AdminDashboard = () => {
   const deleteUser = async (userId) => {
     if (!window.confirm('Permanently delete this user?')) return;
     try {
-      const res = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE', headers });
+      const res = await fetch(`${API}/api/admin/users/${userId}`, { method: 'DELETE', headers });
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
       setUsers((prev) => prev.filter((u) => u._id !== userId));
     } catch (err) {
@@ -142,7 +143,7 @@ const AdminDashboard = () => {
   const deleteJob = async (jobId) => {
     if (!window.confirm('Permanently delete this job?')) return;
     try {
-      const res = await fetch(`/api/admin/jobs/${jobId}`, { method: 'DELETE', headers });
+      const res = await fetch(`${API}/api/admin/jobs/${jobId}`, { method: 'DELETE', headers });
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
       setJobs((prev) => prev.filter((j) => j._id !== jobId));
     } catch (err) {

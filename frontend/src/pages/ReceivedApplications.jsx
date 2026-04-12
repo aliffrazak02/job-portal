@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './ReceivedApplications.css';
+import { API } from '../api.js';
 
 const STATUSES = ['pending', 'reviewed', 'shortlisted', 'rejected'];
 
@@ -45,7 +46,7 @@ export default function ReceivedApplications() {
         if (jobId) params.set('jobId', jobId);
         if (status) params.set('applicationStatus', status);
 
-        const res = await fetch(`/api/applications/received?${params}`, {
+        const res = await fetch(`${API}/api/applications/received?${params}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -63,7 +64,7 @@ export default function ReceivedApplications() {
 
   // Fetch my jobs list for the filter dropdown
   useEffect(() => {
-    fetch(`/api/jobs/mine?limit=100`, {
+    fetch(`${API}/api/jobs/mine?limit=100`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => r.json())
@@ -98,7 +99,7 @@ export default function ReceivedApplications() {
 
   const handleStatusChange = async (appId, newStatus) => {
     try {
-      const res = await fetch(`/api/applications/${appId}/status`, {
+      const res = await fetch(`${API}/api/applications/${appId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

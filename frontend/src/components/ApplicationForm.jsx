@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './ApplicationForm.css';
+import { API } from '../api.js';
 
 const ApplicationForm = () => {
   const [searchParams] = useSearchParams();
@@ -50,7 +51,7 @@ const ApplicationForm = () => {
     if (coverLetter) body.append('coverLetter', coverLetter);
 
     try {
-      const res = await fetch('/api/applications', {
+      const res = await fetch(`${API}/api/applications`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body,

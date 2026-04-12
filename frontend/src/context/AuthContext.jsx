@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { API } from '../api.js';
 
 const AuthContext = createContext(null);
 
@@ -51,7 +52,7 @@ export function AuthProvider({ children }) {
       }
 
       try {
-        const res = await fetch('/api/auth/me', {
+        const res = await fetch(`${API}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${activeToken}`,
           },
@@ -82,7 +83,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(
     async (email, password) => {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -109,7 +110,7 @@ export function AuthProvider({ children }) {
         formData.append('profileImage', profileImageFile);
       }
 
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${API}/api/auth/register`, {
         method: 'POST',
         body: formData,
       });
