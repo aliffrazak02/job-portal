@@ -15,6 +15,19 @@ const routeLabels = {
   'employer-profile': 'Employer Profile',
   'manage-jobs': 'Manage Jobs',
   'create-job': 'Create Job',
+  'apply': 'Apply',
+};
+
+const isMongoId = (str) => /^[a-f\d]{24}$/i.test(str);
+
+const getLabel = (segment, prevSegment) => {
+  if (routeLabels[segment]) return routeLabels[segment];
+  if (isMongoId(segment)) {
+    if (prevSegment === 'jobs') return 'Job Details';
+    if (prevSegment === 'companies') return 'Company';
+    return 'Details';
+  }
+  return decodeURIComponent(segment);
 };
 
 const Breadcrumb = () => {
@@ -29,7 +42,8 @@ const Breadcrumb = () => {
       {pathnames.map((segment, index) => {
         const routeTo = '/' + pathnames.slice(0, index + 1).join('/');
         const isLast = index === pathnames.length - 1;
-        const label = routeLabels[segment] || decodeURIComponent(segment);
+        const prevSegment = index > 0 ? pathnames[index - 1] : '';
+        const label = getLabel(segment, prevSegment);
 
         return (
           <span key={routeTo} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
