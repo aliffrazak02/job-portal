@@ -7,6 +7,8 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [agreed, setAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -25,7 +27,7 @@ const SignUp = () => {
   setError("");
   setLoading(true);
   try {
-    await register(name, email, password, role);
+    await register(name, email, password, role, profileImage);
     navigate("/dashboard");
   } catch (err) {
     setError(err.message);
@@ -119,6 +121,36 @@ const SignUp = () => {
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
+            </div>
+          </div>
+
+          {/* Profile Image Upload */}
+          <div className="jobboard-form-group">
+            <label htmlFor="profileImage">Profile Image (optional)</label>
+            <div className="jobboard-image-upload">
+              {imagePreview && (
+                <img src={imagePreview} alt="Preview" className="jobboard-image-preview" />
+              )}
+              <div className="jobboard-input-wrapper">
+                <span className="jobboard-input-icon">📷</span>
+                <input
+                  id="profileImage"
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setProfileImage(file || null);
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => setImagePreview(reader.result);
+                      reader.readAsDataURL(file);
+                    } else {
+                      setImagePreview(null);
+                    }
+                  }}
+                  style={{ paddingLeft: '46px' }}
+                />
+              </div>
             </div>
           </div>
 
@@ -249,6 +281,9 @@ const SignUp = () => {
 
         .jobboard-signup-text { text-align: center; color: #475569; font-size: 0.98rem; }
         .jobboard-signup-text a { color: #2563eb; text-decoration: none; font-weight: 700; }
+
+        .jobboard-image-upload { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+        .jobboard-image-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #dbeafe; }
       `}</style>
     </section>
   );
