@@ -54,7 +54,15 @@ const userSchema = new mongoose.Schema(
       companyLogoUrl: { type: String, trim: true },
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { transform: (_doc, ret) => {
+    // Normalize profileImage from multer path `uploads/file.jpg` → `/uploads/file.jpg`
+    if (ret.profileImage) {
+      const forward = ret.profileImage.replace(/\\/g, '/');
+      ret.profileImage = forward.startsWith('/') ? forward : `/${forward}`;
+    }
+    delete ret.password;
+    return ret;
+  } } }
 );
 
 userSchema.index({ email: 1 });

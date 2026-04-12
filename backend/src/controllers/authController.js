@@ -7,12 +7,19 @@ const generateToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 
+// Converts `uploads/file.jpg` (stored by multer) to `/uploads/file.jpg` (web-accessible URL)
+export const normalizeImagePath = (p) => {
+  if (!p) return '';
+  const forward = p.replace(/\\/g, '/');
+  return forward.startsWith('/') ? forward : `/${forward}`;
+};
+
 const userResponse = (user) => ({
   id: user._id,
   name: user.name,
   email: user.email,
   role: user.role,
-  profileImage: user.profileImage || '',
+  profileImage: normalizeImagePath(user.profileImage),
   profile: user.profile ?? {},
   createdAt: user.createdAt,
 });
@@ -54,7 +61,7 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   const u = req.user;
-  res.json({ id: u._id, name: u.name, email: u.email, role: u.role, profileImage: u.profileImage || '', profile: u.profile ?? {}, createdAt: u.createdAt });
+  res.json({ id: u._id, name: u.name, email: u.email, role: u.role, profileImage: normalizeImagePath(u.profileImage), profile: u.profile ?? {}, createdAt: u.createdAt });
 };
 
 export const changePassword = async (req, res) => {
