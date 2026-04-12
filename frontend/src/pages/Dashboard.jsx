@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import EmployerDashboard from './EmployerDashboard';
 import './Dashboard.css';
+import { API } from '../api.js';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
@@ -99,10 +100,10 @@ const Dashboard = () => {
         const headers = { Authorization: `Bearer ${token}` };
 
         const [profileRes, statsRes, applicationsRes, jobsRes] = await Promise.all([
-          fetch('/api/profile', { headers }),
-          fetch('/api/applications/stats', { headers }),
-          fetch('/api/applications/mine?limit=2', { headers }),
-          fetch('/api/jobs?limit=3'),
+          fetch(`${API}/api/profile`, { headers }),
+          fetch(`${API}/api/applications/stats`, { headers }),
+          fetch(`${API}/api/applications/mine?limit=2`, { headers }),
+          fetch(`${API}/api/jobs?limit=3`),
         ]);
 
         const [profileData, statsData, applicationsData, jobsData] = await Promise.all([
@@ -149,7 +150,7 @@ const Dashboard = () => {
       setSavingProfile(true);
       setSaveMessage('');
 
-      const res = await fetch('/api/profile', {
+      const res = await fetch(`${API}/api/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

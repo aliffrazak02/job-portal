@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import "./JobDetail.css";
+import { API } from '../api.js';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
@@ -22,7 +23,7 @@ const JobDetail = () => {
     const fetchJob = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/jobs/${id}`);
+        const res = await fetch(`${API}/api/jobs/${id}`);
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         const data = await res.json();
         setJob(data);

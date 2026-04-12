@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import JobCard from "../components/JobCard";
 import "./JobSearch.css";
+import { API } from '../api.js';
 
 const WORK_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
 
@@ -37,7 +38,7 @@ const JobSearch = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const res = await fetch("/api/jobs?limit=1");
+        const res = await fetch(`${API}/api/jobs?limit=1`);
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         const json = await res.json();
         setTotalJobs(json.pagination?.totalItems ?? 0);
@@ -58,7 +59,7 @@ const JobSearch = () => {
           if (initialQ) params.set("q", initialQ);
           if (initialWorkType) params.set("workType", initialWorkType);
           params.set("limit", "100");
-          const res = await fetch(`/api/jobs?${params}`);
+          const res = await fetch(`${API}/api/jobs?${params}`);
           if (!res.ok) throw new Error(`Server error: ${res.status}`);
           const json = await res.json();
           setResults(json.data ?? []);
@@ -88,7 +89,7 @@ const JobSearch = () => {
       if (workType) params.set("workType", workType);
       params.set("limit", "100");
 
-      const res = await fetch(`/api/jobs?${params}`);
+      const res = await fetch(`${API}/api/jobs?${params}`);
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
       const json = await res.json();
       setResults(json.data ?? []);

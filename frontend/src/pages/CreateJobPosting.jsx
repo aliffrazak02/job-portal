@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './CreateJobPosting.css';
-
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
+import { API } from '../api.js';
 
 const WORK_TYPES = ['Full-time', 'Part-time', 'Contract', 'Internship'];
 

@@ -3,8 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './EmployerDashboard.css';
-
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
+import { API } from '../api.js';
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
