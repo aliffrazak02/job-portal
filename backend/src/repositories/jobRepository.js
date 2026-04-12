@@ -6,7 +6,9 @@ export const findById = (id) => Job.findById(id);
 
 export const findByIdPopulated = (id) => Job.findById(id).populate('postedBy', 'name email');
 
-export const deleteById = (id, job) => job.deleteOne();
+export const deleteById = (id) => Job.findByIdAndDelete(id);
+
+export const deleteMany = (filter) => Job.deleteMany(filter);
 
 export const countDocuments = (filter = {}) => Job.countDocuments(filter);
 

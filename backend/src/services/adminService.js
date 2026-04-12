@@ -2,9 +2,6 @@ import * as userRepo from '../repositories/userRepository.js';
 import * as jobRepo from '../repositories/jobRepository.js';
 import * as appRepo from '../repositories/applicationRepository.js';
 import * as commentRepo from '../repositories/commentRepository.js';
-import Job from '../models/Job.js';
-import Application from '../models/Application.js';
-import Comment from '../models/Comment.js';
 
 export const getStats = async () => {
   const thirtyDaysAgo = new Date();
@@ -93,18 +90,18 @@ export const deleteUser = async (userId) => {
   if (!user) throw Object.assign(new Error('User not found'), { status: 404 });
 
   if (user.role === 'employer') {
-    const jobs = await Job.find({ postedBy: user._id }).select('_id');
+    const jobs = await jobRepo.findByPostedBy(user._id, '_id');
     const jobIds = jobs.map((j) => j._id);
     if (jobIds.length > 0) {
-      await Application.deleteMany({ job: { $in: jobIds } });
+      await appRepo.deleteMany({ job: { $in: jobIds } });
     }
-    await Job.deleteMany({ postedBy: user._id });
+    await jobRepo.deleteMany({ postedBy: user._id });
   } else if (user.role === 'jobseeker') {
-    await Application.deleteMany({ applicant: user._id });
+    await appRepo.deleteMany({ applicant: user._id });
   }
 
   // Delete user's comments
-  await Comment.deleteMany({ author: user._id });
+  await commentRepo.deleteMany({ author: user._id });
   await user.deleteOne();
 };
 

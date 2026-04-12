@@ -88,8 +88,7 @@ export const deleteAccount = async (userId, password) => {
     const jobs = await jobRepo.findByPostedBy(user._id, '_id');
     const jobIds = jobs.map((j) => j._id);
     if (jobIds.length > 0) await appRepo.deleteMany({ job: { $in: jobIds } });
-    await jobRepo.countDocuments(); // no-op placeholder
-    await import('../models/Job.js').then((m) => m.default.deleteMany({ postedBy: user._id }));
+    await jobRepo.deleteMany({ postedBy: user._id });
   } else {
     await appRepo.deleteMany({ applicant: user._id });
   }
