@@ -3,7 +3,7 @@ name: CD
 on:
   workflow_run:
     workflows: [CI]          # triggers when the CI workflow finishes
-    branches: [main, production]
+    branches: [main]
     types: [completed]
 
 # Cancel a queued deploy for the same branch if a newer one arrives
