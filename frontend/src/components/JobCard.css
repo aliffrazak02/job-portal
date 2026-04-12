@@ -50,6 +50,16 @@
   text-overflow: ellipsis;
 }
 
+.jc-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.jc-title-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
 .jc-company {
   margin: 0 0 4px;
   font-size: 0.92rem;
