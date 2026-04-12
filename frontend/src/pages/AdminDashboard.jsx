@@ -39,8 +39,30 @@ const AdminDashboard = () => {
         statsRes.json(), activityRes.json(),
       ]);
       if (!statsRes.ok) throw new Error(statsData.message);
-      setStats(statsData);
-      if (activityRes.ok) setActivity(activityData.activity || []);
+      setStats({
+        totalUsers: statsData.users?.total ?? 0,
+        totalJobs: statsData.jobs?.total ?? 0,
+        totalApplications: statsData.applications?.total ?? 0,
+        totalComments: statsData.comments?.total ?? 0,
+      });
+      if (activityRes.ok) {
+        // Merge 4 separate arrays into a single timeline keyed by date
+        const dateMap = {};
+        (activityData.registrations || []).forEach((d) => {
+          dateMap[d._id] = { ...dateMap[d._id], date: d._id, registrations: d.count };
+        });
+        (activityData.jobs || []).forEach((d) => {
+          dateMap[d._id] = { ...dateMap[d._id], date: d._id, jobs: d.count };
+        });
+        (activityData.applications || []).forEach((d) => {
+          dateMap[d._id] = { ...dateMap[d._id], date: d._id, applications: d.count };
+        });
+        (activityData.comments || []).forEach((d) => {
+          dateMap[d._id] = { ...dateMap[d._id], date: d._id, comments: d.count };
+        });
+        const merged = Object.values(dateMap).sort((a, b) => a.date.localeCompare(b.date));
+        setActivity(merged);
+      }
     } catch (err) {
       setError(err.message);
     }
