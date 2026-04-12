@@ -7,6 +7,7 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [agreed, setAgreed] = useState(false);
@@ -21,6 +22,10 @@ const SignUp = () => {
   e.preventDefault();
   if (!agreed) {
     setError("You must agree to the Terms & Conditions.");
+    return;
+  }
+  if (password !== confirmPassword) {
+    setError("Passwords do not match.");
     return;
   }
 
@@ -121,6 +126,21 @@ const SignUp = () => {
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
+            </div>
+          </div>
+
+          <div className="jobboard-form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="jobboard-input-wrapper">
+              <span className="jobboard-input-icon">🔒</span>
+              <input
+                id="confirmPassword"
+                type={showPassword ? "text" : "password"}
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
             </div>
           </div>
 
